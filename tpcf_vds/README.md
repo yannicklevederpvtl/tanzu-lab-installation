@@ -15,7 +15,7 @@ To install TPCF, create a `tas.config` file from a copy of the `tasX.0.config_te
 ```
 
 This will use the already provisioned Jumpbox to run most of the heavy lifting
-like downloading and uploading the Operations Manager OVA and TAS tile.
+like downloading and uploading the OpsMan OVA and TPCF tile.
 
 Once installation is complete the script generates an `.envrc` file for this
 environment in the current `tpcf_vds` directory. If you have [direnv] installed
@@ -55,7 +55,7 @@ https://login.sys.<tas_subdomain>.<homelab_domain>/
 ```
 
 ## Install Postgres & GenAI tiles
-This script assumes that TPFC is deployed
+This script assumes that TPCF is deployed
 
 ```sh
 ./install_genaiservices.sh
@@ -114,7 +114,8 @@ postgres_version='1.1.2-build.6'
 - `gorouter_ip_range` - specify static IP addresses for gorouter instances (HTTP protocols)
 - `ssh_ip_range` - specify static IP addresses for TCP router instances (non-HTTP protocols)
 - `tcp_ip_range` - specify static IP addresses for control plane components
-- `tas_version` - the TAS version to deploy, versions 4.0.x through 10.0.2 are supported.
+- `opsman_private_ip` - OpsMan IP address (direclty exposed in this VDS topology without LB)
+- `tas_version` - the TPCF version to deploy, versions 4.0.x through 10.0.2 are supported.
 - `install_full_tas` - when true the full (large) version of TPCF is deployed, otherwise the TPCF small footprint version. (not yet functional)
 - `install_tasw` - when true TPCF is deployed with the Windows stack. (not yet functional)
 

@@ -15,7 +15,7 @@ To install TPCF, create a `tas.config` file from a copy of the desired version `
 ```
 
 This will use the already provisioned Jumpbox to run most of the heavy lifting
-like downloading and uploading the Operations Manager OVA and TAS tile.
+like downloading and uploading the OpsMan OVA and TPCF tile.
 
 Once installation is complete the script generates an `.envrc` file for this
 environment in the current `tpcf_nsx` directory. If you have [direnv] installed
@@ -49,7 +49,7 @@ To access OpsMan GUI (`admin` as username, `<om_password>` as password)
 https://opsman.<tas_subdomain>.<homelab_domain>/
 ```
 
-To access Apps Manager GUI (`admin` as username, `In the OpsMan GUI -> TAS Tile -> Credentials tab -> UAA section -> Admin Credentials` as password)
+To access Apps Manager GUI (`admin` as username, `In the OpsMan GUI -> TPCF Tile -> Credentials tab -> UAA section -> Admin Credentials` as password)
 ```sh
 https://login.sys.<tas_subdomain>.<homelab_domain>/
 ```
@@ -110,19 +110,19 @@ postgres_version='1.1.2-build.6'
 by default Operations Manager and the BOSH director (nsxt-egress).
 - `tas_deployment_nat_gateway_ip` is the SNAT IP for all TPCF VMs, so things like Diego cells, GoRouters,
 Cloud Controller etc (nsxt-egress).
-- `tas_services_nat_gateway_ip` is the SNAT IP for all optional service tile VMs, for example the MySQL tile (nsxt-egress).
+- `tas_services_nat_gateway_ip` is the SNAT IP for all optional service tile VMs, for example the Postgres tile (nsxt-egress).
 - `tas_ops_manager_public_ip` is the DNAT IP address for Operations Manager that is reachable from
 the VMware network. This is the IP address your `opsman` DNS entry should point to (nsxt-ingress).
 - `tas_lb_web_virtual_server_ip_address` is the DNAT IP address for the NSX-T ingress load balancer that
 sits in from of the TPCF GoRouters. This is how the Cloud Controller and application's running on TAS are accessed.
 This is the IP address that your `*.apps` and `*.sys` DNS entries should point to (nsxt-ingress).
-- `tas_lb_tcp_virtual_server_ip_address` is the DNAT IP address if you're using TCP routing in TAS (nsxt-ingress).
+- `tas_lb_tcp_virtual_server_ip_address` is the DNAT IP address if you're using TCP routing in TPCF (nsxt-ingress).
 - `tas_lb_ssh_virtual_server_ip_address` is the DNAT IP address when using `cf ssh` to SSH into running app instances (nsxt-ingress).
 - `nsxt_t0_gw_name` is the name of your T0 in NSX
 - `nsxt_tz_name` is the name of your transport zone in NSX
 - `opsman_version` - the version of Operations Manager to deploy
-- `tas_version` - the TAS version to deploy, versions 4.0.x through 10.0.2 are supported.
-- `install_full_tas` - when true the full (large) version of TPCF is deployed, otherwise the TAS small footprint version. (not yet functional)
+- `tas_version` - the TPCF version to deploy, versions 4.0.x through 10.0.2 are supported.
+- `install_full_tas` - when true the full (large) version of TPCF is deployed, otherwise the TPCF small footprint version. (not yet functional)
 - `install_tasw` - when true TPCF is deployed with the Windows stack. (not yet functional)
 
 
