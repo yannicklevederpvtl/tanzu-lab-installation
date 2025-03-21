@@ -2,7 +2,7 @@
 Automation to install TPCF (small footprint runtime) in your homelab environment (NSX-T deployment type) & GenAI for TPCF
 
 ### Prerequisites
-vCenter 7.x or superior, one routable Port Groups (here "Management" as default value), an NSX T0 with BGP and Internet access properly configured, for example GenAI workers in the "Services" segment need to access/download AI models from the Internet.
+vCenter 7.x or superior, one routable Port Groups (here "Management" as default value), an NSX T0 with BGP and Internet access properly configured, for example GenAI workers in the "Services" segment need to access/download AI models from the Internet. The script will Terraform all the T1, LBs, Pools, etc.
 
 ## Install TPCF
 This script assumes you're running it from a Mac or Linux workstation connected
