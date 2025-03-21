@@ -44,6 +44,15 @@ To SSH to OpsMan
 ssh -F ../jumpbox/.ssh/config opsman
 ```
 
+To access OpsMan GUI
+```sh
+https://opsman.<tas_subdomain>.<homelab_domain>/
+```
+
+To access Apps Manager GUI
+```sh
+https://login.sys.<tas_subdomain>.<homelab_domain>/
+```
 
 ## Install Postgres & GenAI tiles
 This script assumes that TPFC is deployed
