@@ -14,7 +14,7 @@ This script assumes you're running it from a Mac or Linux workstation connected
 to your vCenter. Before running the Jumpbox configure or install script to ensure
 you have [govc], [ytt] installed and available on your PATH.
 
-To create a jumpbox, create a `jumpbox.config` file from a copy of the `jumpbox.config_template` template, edit the values as needed with your environment variables and then execute the install:
+To create a jumpbox, create a `jumpbox.config` file from a copy of the `jumpbox.config_template` template, edit the values as needed with your environment variables (see [configuration]) and then execute the install:
 
 ```sh
 ./install.sh
@@ -94,7 +94,7 @@ To destroy the Jumpbox run
 
 [govc]: #govc-installation
 [ytt]: #ytt-installation
-
+[configuration]: #configuration
 
 ## Dependencies
 

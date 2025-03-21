@@ -7,7 +7,7 @@ This script assumes you're running it from a Mac or Linux workstation connected
 to your vCenter and the [jumpbox] is deployed.
 
 
-To create a Harbor registry, create a `harbor.config` file from a copy of the `harbor.config_template` template, edit the values as needed with your environment variables and then execute the install:
+To create a Harbor registry, create a `harbor.config` file from a copy of the `harbor.config_template` template, edit the values as needed with your environment variables (see [configuration]) and then execute the install:
 
 ```sh
 ./install.sh
@@ -16,7 +16,7 @@ To create a Harbor registry, create a `harbor.config` file from a copy of the `h
 This will download the latest Ubuntu Jammy OVA and spin up a Harbor VM in
 your vSphere environment.
 
-## Create a DNS A Record 
+## Create DNS A Record 
 
 Once the VM is deployed, create an A record in your DNS server based your environment variables 
 
@@ -82,3 +82,4 @@ To destroy Harbor run
 ```
 
 [jumpbox]: ../jumpbox/README.md
+[configuration]: #configuration

@@ -2,13 +2,13 @@
 Automation to install TPCF (small footprint runtime) in your homelab environment (VDS deployment type, no load balancers) & GenAI for TPCF
 
 ### Prerequisites
-vCenter 7.x or superior, 3 routable Port Groups (here "Management", "Deployment", "Services" as default values) with Internet access, for example GenAI workers in the "Services" segment need to access/download AI models from the Internet
+vCenter 7.x or superior, 3 routable Port Groups (for example "Management", "Deployment", "Services" as default values, see [configuration] to customize it as needed) with Internet access, for example GenAI workers in the "Services" segment need to access/download AI models from the Internet
 
 ## Install TPCF
 This script assumes you're running it from a Mac or Linux workstation connected
 to your vCenter and the [jumpbox] is deployed.
 
-To install TPCF, create a `tas.config` file from a copy of the `tasX.0.config_template` template, edit the values as needed with your environment variables, then run the installation:
+To install TPCF, create a `tas.config` file from a copy of the `tasX.0.config_template` template, edit the values as needed with your environment variables (see [configuration]), then run the installation:
 
 ```sh
 ./install.sh
@@ -46,12 +46,12 @@ ssh -F ../jumpbox/.ssh/config opsman
 
 To access OpsMan GUI (`admin` as username, `<om_password>` as password)
 ```sh
-https://opsman.<tas_subdomain>.<homelab_domain>/
+https://opsman.<tas_subdomain>.<homelab_domain>
 ```
 
 To access Apps Manager GUI (`admin` as username, `In the OpsMan GUI -> TAS Tile -> Credentials tab -> UAA section -> Admin Credentials` as password)
 ```sh
-https://login.sys.<tas_subdomain>.<homelab_domain>/
+https://login.sys.<tas_subdomain>.<homelab_domain>
 ```
 
 ## Install Postgres & GenAI tiles
@@ -137,4 +137,5 @@ To destroy the TPCF deployment run
 [bosh]: https://bosh.io/docs/cli-v2-install/
 [CF]: https://docs.cloudfoundry.org/cf-cli/install-go-cli.html
 [jumpbox]: ../jumpbox/README.md
+[configuration]: #configuration
 
