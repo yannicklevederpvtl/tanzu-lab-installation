@@ -22,7 +22,7 @@ environment in the current `tpcf_nsx` directory. If you have [direnv] installed
 you can execute `direnv allow` which will setup the environment connection
 variables for [om], [bosh], [CF] CLIs
 
-You can then start using commands, for example:
+You can then start using commands from your workstation in the current `tpcf_nsx` directory, for example:
 
 List BOSH VMs
 ```sh
@@ -44,12 +44,12 @@ To SSH to OpsMan
 ssh -F ../jumpbox/.ssh/config opsman
 ```
 
-To access OpsMan GUI
+To access OpsMan GUI (`admin` as username, `<om_password>` as password)
 ```sh
 https://opsman.<tas_subdomain>.<homelab_domain>/
 ```
 
-To access Apps Manager GUI
+To access Apps Manager GUI (`admin` as username, `In the OpsMan GUI -> TAS Tile -> Credentials tab -> UAA section -> Admin Credentials` as password)
 ```sh
 https://login.sys.<tas_subdomain>.<homelab_domain>/
 ```
