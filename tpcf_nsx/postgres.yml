@@ -1,0 +1,97 @@
+product-name: postgres
+network-properties:
+  network:
+    name: deployment
+  other_availability_zones:
+  - name: az1
+  service_network:
+    name: services
+  singleton_availability_zone:
+    name: az1
+product-properties:
+  .postgres-on-demand-broker.database:
+    value: postgres
+  .postgres-on-demand-broker.enable_create_swap_delete:
+    value: false
+  .postgres-on-demand-broker.pg_password:
+    value: admin
+  .postgres-on-demand-broker.pg_user:
+    value: pgadmin
+  .postgres-on-demand-broker.service_instance_limit:
+    value: 20
+  .postgres-on-demand-broker.service_instance_sharing:
+    value: false
+  .postgres-on-demand-broker.service_instance_limit:
+    value: 20
+  .properties.backups_selector:
+    value: No Backups
+  .properties.canary_org_space_selector:
+    value: "No"
+  .properties.metrics_polling_interval:
+    value: 30
+  .properties.on_demand_secure_bindings_selector:
+    value: "No"
+  .properties.settings_services_gateway:
+    value: "Yes"
+  .properties.settings_services_gateway.enabled.tcp_fqdn:
+    value: ((tcp_fqdn))
+  .properties.syslog:
+    value: disable
+  .properties.plan_collection:
+    value:
+    - az_multi_select:
+      - az1
+      az_multi_select_monitor:
+      - az1
+      cf_service_access: enable
+      configured_plan_id: null
+      description: This plan provides a test on-demand postgres instance, tailored
+        for caching use-cases with persistence to disk enabled
+      disk_size: "10240"
+      ha_enabled: false
+      instance_limit: 20
+      maxclients: 1000
+      name: on-demand-postgres-db
+      tcp_keepalive: 60
+      timeout: 3600
+      tls_enabled: false
+      vm_type: medium
+resource-config:
+  postgres-on-demand-broker:
+    max_in_flight: 100%
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    swap_as_percent_of_memory_size: automatic
+syslog-properties:
+  address: null
+  custom_rsyslog_configuration: null
+  enabled: false
+  environment: null
+  forward_debug_logs: false
+  permitted_peer: null
+  port: null
+  queue_size: null
+  ssl_ca_certificate: null
+  tls_enabled: false
+  transport_protocol: tcp
+errand-config:
+  delete-all-service-instances-and-deregister-broker:
+    pre-delete-state: true
+  orphan-deployments:
+    post-deploy-state: false
+  recreate-all-service-instances:
+    post-deploy-state: false
+  register-broker:
+    post-deploy-state: true
+  s3-upload-test:
+    post-deploy-state: false
+  upgrade-all-service-instances:
+    post-deploy-state: true

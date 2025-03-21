@@ -1,0 +1,121 @@
+az-configuration:
+- name: az1
+  iaas_configuration_name: default
+  clusters:
+  - cluster: ((iaas-configurations_0_vcenter_cluster))
+    drs_rule: MUST
+    host_group: null
+    resource_pool: ((iaas-configurations_0_vcenter_pool))
+iaas-configurations:
+- additional_cloud_properties: {}
+  bosh_disk_path: tas_disk
+  bosh_template_folder: tas_templates
+  bosh_vm_folder: tas_vms
+  datacenter: ((iaas-configurations_0_vcenter_datacenter))
+  disk_type: thin
+  ephemeral_datastore_clusters_string: ""
+  ephemeral_datastores_string: ((iaas-configurations_0_vcenter_datastore))
+  name: default
+  nsx_networking_enabled: false
+  persistent_datastore_clusters_string: ""
+  persistent_datastores_string: ((iaas-configurations_0_vcenter_datastore))
+  ssl_verification_enabled: false
+  vcenter_host: ((iaas-configurations_0_vcenter_host))
+  vcenter_password: ((iaas-configurations_0_vcenter_password))
+  vcenter_username: administrator@vsphere.local
+network-assignment:
+  network:
+    name: infra
+  other_availability_zones: []
+  singleton_availability_zone:
+    name: az1
+networks-configuration:
+  icmp_checks_enabled: true
+  networks:
+  - name: infra
+    subnets:
+    - iaas_identifier: ((iaas-configurations_0_infrastructure_network_identifier))
+      cidr: ((iaas-configurations_0_infrastructure_cidr))
+      dns: ((iaas-configurations_0_dns_servers))
+      gateway: ((iaas-configurations_0_infrastructure_nat_gateway_ip))
+      reserved_ip_ranges: ((iaas-configurations_0_infrastructure_reserved_ip_ranges))
+      availability_zone_names:
+      - az1
+  - name: deployment
+    subnets:
+    - iaas_identifier: ((iaas-configurations_0_deployment_network_identifier))
+      cidr: ((iaas-configurations_0_deployment_cidr))
+      dns: ((iaas-configurations_0_dns_servers))
+      gateway: ((iaas-configurations_0_deployment_nat_gateway_ip))
+      reserved_ip_ranges: ((iaas-configurations_0_deployment_reserved_ip_ranges))
+      availability_zone_names:
+      - az1
+  - name: services
+    subnets:
+    - iaas_identifier: ((iaas-configurations_0_services_network_identifier))
+      cidr: ((iaas-configurations_0_services_cidr))
+      dns: ((iaas-configurations_0_dns_servers))
+      gateway: ((iaas-configurations_0_services_nat_gateway_ip))
+      reserved_ip_ranges: ((iaas-configurations_0_services_reserved_ip_ranges))
+      availability_zone_names:
+      - az1
+properties-configuration:
+  director_configuration:
+    additional_ssh_users: []
+    blobstore_type: local
+    bosh_director_recreate_on_next_deploy: false
+    bosh_recreate_on_next_deploy: false
+    bosh_recreate_persistent_disks_on_next_deploy: false
+    ca_certificate_duration: 1460
+    database_type: internal
+    director_metrics_server_enabled: true
+    director_worker_count: 5
+    duration_overrides_enabled: false
+    encryption:
+      keys: []
+      providers: []
+    hm_emailer_options:
+      enabled: false
+    hm_pager_duty_options:
+      enabled: false
+    identification_tags: {}
+    job_configuration_on_tmpfs: false
+    keep_unreachable_vms: false
+    leaf_certificate_duration: 730
+    local_blobstore_options:
+      enable_signed_urls: true
+    metrics_server_enabled: true
+    ntp_servers_string: ((iaas-configurations_0_ntp_servers))
+    post_deploy_enabled: false
+    resurrector_enabled: false
+    retry_bosh_deploys: false
+    skip_director_drain: false
+    system_metrics_runtime_enabled: true
+  dns_configuration:
+    excluded_recursors: []
+    handlers: []
+  security_configuration:
+    clear_default_trusted_certificates_store: false
+    generate_vm_passwords: true
+    opsmanager_root_ca_trusted_certs: true
+  syslog_configuration:
+    enabled: false
+resource-configuration:
+  compilation:
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: xlarge.disk
+    instances: automatic
+    swap_as_percent_of_memory_size: automatic
+  director:
+    additional_networks: []
+    additional_vm_extensions: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    persistent_disk:
+      size_mb: "153600"
+    swap_as_percent_of_memory_size: automatic
+vmextensions-configuration: []
+vmtypes-configuration: {}

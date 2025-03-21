@@ -1,0 +1,164 @@
+product-name: genai
+product-properties:
+  .controller.strict_mode:
+    value: true
+  .errands.aws_vm_types:
+    value:
+    - ephemeral_disk: 40000
+      install_nvidia_open_driver: true
+      instance_type: g4dn.xlarge
+      name: t4
+      root_disk: 25000
+    - ephemeral_disk: 40000
+      install_nvidia_open_driver: false
+      instance_type: m7i.2xlarge
+      name: cpu
+      root_disk: 25000
+  .errands.azure_vm_types:
+    value:
+    - install_nvidia_open_driver: true
+      instance_type: Standard_NC4as_T4_v3
+      name: t4
+      root_disk: 25000
+  .errands.gcp_vm_types:
+    value:
+    - accelerator: nvidia-tesla-t4
+      accelerator_count: 1
+      install_nvidia_open_driver: true
+      machine_type: n1-standard-8
+      name: t4
+      root_disk_size: 25
+      root_disk_type: pd-ssd
+    - accelerator: null
+      accelerator_count: null
+      install_nvidia_open_driver: false
+      machine_type: c2-standard-8
+      name: cpu
+      root_disk_size: 25
+      root_disk_type: pd-ssd
+  .errands.ollama_models:
+    value:
+    - azs:
+      - az1
+      disk_type: null
+      instances: 1
+      model_aliases: null
+      model_capabilities:
+      - chat
+      model_name: gemma2:2b
+      model_url: null
+      model_url_auth: null
+      model_url_sha: null
+      plan_access_enabled: true
+      plan_description: null
+      plan_name: null
+      requests_per_minute: null
+      tkgi_access_enabled: false
+      tokens_per_minute: null
+      vm_type: cpu
+      wire_format: openai
+  .errands.register_broker_https:
+    value: true
+  .errands.tkgi_skip_ssl_validation:
+    value: false
+  .errands.vgpu_license_server_port:
+    value: "443"
+  .errands.vsphere_vm_types:
+    value:
+    - cpu: 8
+      ephemeral_disk: 65536
+      name: cpu
+      pci_passthrough_device_id: null
+      pci_passthrough_vendor_id: null
+      pci_passthrough_vmx_opts_MMIO_size: null
+      pci_passthrough_vmx_opts_use_64_bit_MMIO: null
+      processing_technology: cpu
+      ram: 32768
+      root_disk: 25
+      vgpus: null
+  .properties.database_source:
+    selected_option: service_broker
+    value: service_broker
+  .properties.database_source.service_broker.name:
+    value: postgres
+  .properties.database_source.service_broker.plan_name:
+    value: on-demand-postgres-db
+  .properties.proxy_selector:
+    selected_option: disabled
+    value: Disabled
+network-properties:
+  network:
+    name: deployment
+  other_availability_zones:
+  - name: az1
+  service_network:
+    name: services
+  singleton_availability_zone:
+    name: az1
+resource-config:
+  controller:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  errands:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  broker-deregistrar:
+    pre-delete-state: true
+  broker-registrar:
+    post-deploy-state: true
+  cleanup-tkgi-clusters:
+    pre-delete-state: false
+  converge-tkgi-clusters:
+    post-deploy-state: false
+  debug-info:
+    post-deploy-state: true
+  delete-backing-db:
+    pre-delete-state: true
+  delete-workers:
+    pre-delete-state: true
+  deploy-workers:
+    post-deploy-state: true
+  recreate-service-instances:
+    post-deploy-state: false
+  release-tests:
+    post-deploy-state: false
+syslog-properties:
+  address: null
+  custom_rsyslog_configuration: null
+  enabled: false
+  environment: null
+  forward_debug_logs: false
+  permitted_peer: null
+  port: null
+  queue_size: null
+  ssl_ca_certificate: null
+  tls_enabled: false
+  transport_protocol: tcp

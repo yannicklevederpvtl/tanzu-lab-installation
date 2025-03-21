@@ -1,0 +1,17 @@
+network:
+  version: 2
+  ethernets:
+    ens192:
+      dhcp4: false
+      link-local: [ ipv4 ]
+      addresses:
+        - ${ip_address}/${network_cidr_bits}
+      routes:
+        - to: default
+          via: ${gateway}
+          metric: 100
+          on-link: true
+      nameservers:
+        addresses: ${nameservers}
+local-hostname: ${vm_name}
+instance-id: harbor

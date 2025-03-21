@@ -1,0 +1,32 @@
+#cloud-config
+password: ${password}
+ssh_pwauth: true
+chpasswd:
+  expire: false
+groups:
+  - docker
+users:
+  - default
+  - name: ubuntu
+    ssh_authorized_keys:
+     - ${ssh_public_key}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: sudo, docker
+    shell: /bin/bash
+
+write_files:
+  - path: /var/cache/harbor/harbor/harbor.yml
+    owner: root:root
+    permissions: '0644'
+    encoding: base64
+    content: |
+      ${harbor_config}
+  - path: /var/cache/harbor/provision.sh
+    owner: root:root
+    permissions: '0755'
+    encoding: base64
+    content: |
+      ${provision_script}
+runcmd:
+  - cd /var/cache/harbor
+  - [ /var/cache/harbor/provision.sh, "${harbor_host}" ]
