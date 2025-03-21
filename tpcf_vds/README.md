@@ -22,6 +22,29 @@ environment in the current `tpcf_vds` directory. If you have [direnv] installed
 you can execute `direnv allow` which will setup the environment connection
 variables for [om], [bosh], [CF] CLIs
 
+You can then start using commands, for example:
+
+List BOSH VMs
+```sh
+bosh vms
+```
+
+List OpsMan tiles
+```sh
+om products
+```
+
+List CF Orgs
+```sh
+cf orgs
+```
+
+To SSH to OpsMan
+```sh
+ssh -F ../jumpbox/.ssh/config opsman
+```
+
+
 ## Install Postgres & GenAI tiles
 This script assumes that TPFC is deployed
 
@@ -83,8 +106,8 @@ postgres_version='1.1.2-build.6'
 - `ssh_ip_range` - specify static IP addresses for TCP router instances (non-HTTP protocols)
 - `tcp_ip_range` - specify static IP addresses for control plane components
 - `tas_version` - the TAS version to deploy, versions 4.0.x through 10.0.2 are supported.
-- `install_full_tas` - when true the full (large) version of TAS is deployed, otherwise the TAS small footprint version. (not yet functional)
-- `install_tasw` - when true TASW is deployed with the Windows stack. (not yet functional)
+- `install_full_tas` - when true the full (large) version of TPCF is deployed, otherwise the TPCF small footprint version. (not yet functional)
+- `install_tasw` - when true TPCF is deployed with the Windows stack. (not yet functional)
 
 After completing your edits, run the install script:
 ```bash

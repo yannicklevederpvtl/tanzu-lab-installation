@@ -22,6 +22,29 @@ environment in the current `tpcf_nsx` directory. If you have [direnv] installed
 you can execute `direnv allow` which will setup the environment connection
 variables for [om], [bosh], [CF] CLIs
 
+You can then start using commands, for example:
+
+List BOSH VMs
+```sh
+bosh vms
+```
+
+List OpsMan tiles
+```sh
+om products
+```
+
+List CF Orgs
+```sh
+cf orgs
+```
+
+To SSH to OpsMan
+```sh
+ssh -F ../jumpbox/.ssh/config opsman
+```
+
+
 ## Install Postgres & GenAI tiles
 This script assumes that TPFC is deployed
 
@@ -76,13 +99,13 @@ postgres_version='1.1.2-build.6'
 
 - `tas_infrastructure_nat_gateway_ip` is the SNAT IP for all VMs on the private infrastructure network,
 by default Operations Manager and the BOSH director (nsxt-egress).
-- `tas_deployment_nat_gateway_ip` is the SNAT IP for all TAS VMs, so things like Diego cells, GoRouters,
+- `tas_deployment_nat_gateway_ip` is the SNAT IP for all TPCF VMs, so things like Diego cells, GoRouters,
 Cloud Controller etc (nsxt-egress).
 - `tas_services_nat_gateway_ip` is the SNAT IP for all optional service tile VMs, for example the MySQL tile (nsxt-egress).
 - `tas_ops_manager_public_ip` is the DNAT IP address for Operations Manager that is reachable from
 the VMware network. This is the IP address your `opsman` DNS entry should point to (nsxt-ingress).
 - `tas_lb_web_virtual_server_ip_address` is the DNAT IP address for the NSX-T ingress load balancer that
-sits in from of the TAS GoRouters. This is how the Cloud Controller and application's running on TAS are accessed.
+sits in from of the TPCF GoRouters. This is how the Cloud Controller and application's running on TAS are accessed.
 This is the IP address that your `*.apps` and `*.sys` DNS entries should point to (nsxt-ingress).
 - `tas_lb_tcp_virtual_server_ip_address` is the DNAT IP address if you're using TCP routing in TAS (nsxt-ingress).
 - `tas_lb_ssh_virtual_server_ip_address` is the DNAT IP address when using `cf ssh` to SSH into running app instances (nsxt-ingress).
@@ -90,8 +113,8 @@ This is the IP address that your `*.apps` and `*.sys` DNS entries should point t
 - `nsxt_tz_name` is the name of your transport zone in NSX
 - `opsman_version` - the version of Operations Manager to deploy
 - `tas_version` - the TAS version to deploy, versions 4.0.x through 10.0.2 are supported.
-- `install_full_tas` - when true the full (large) version of TAS is deployed, otherwise the TAS small footprint version. (not yet functional)
-- `install_tasw` - when true TASW is deployed with the Windows stack. (not yet functional)
+- `install_full_tas` - when true the full (large) version of TPCF is deployed, otherwise the TAS small footprint version. (not yet functional)
+- `install_tasw` - when true TPCF is deployed with the Windows stack. (not yet functional)
 
 
 After completing your edits, run the install script:
