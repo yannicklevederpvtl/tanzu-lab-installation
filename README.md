@@ -17,8 +17,8 @@ With a Jumpbox created, follow one of the helpers below to setup a platform.
 
 
 
-* ### Tanzu Platform for Cloud Foundry (TPCF) on vSphere NSX-T & GenAI for TPCF
-    [Automation to install TPCF (small footprint runtime) on a vSphere NSX-T deployment type.](./tpcf_nsx/README.md)
+* ### Tanzu Platform for Cloud Foundry (TPCF) on vSphere NSX-T & TKGI & GenAI for TPCF
+    [Automation to install TPCF (small footprint runtime), TKGI on a vSphere NSX-T deployment type.](./tpcf_nsx/README.md)
 
 
 * ### Tanzu Platform for Cloud Foundry (TPCF) on vSphere VDS  & GenAI for TPCF
