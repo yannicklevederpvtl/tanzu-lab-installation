@@ -13,13 +13,16 @@ source ../common/install.sh
 # shellcheck source=common/opsman.sh
 source ../common/opsman.sh
 
-# shellcheck source=tas/tas.sh
+# shellcheck source=tpcf_nsx/tas.sh
 source ./tas.sh
+# shellcheck source=tpcf_nsx/tkgi.sh
+source ./tkgi.sh
 loadJumpboxConfig
 loadConfig "tas.config"
 
 # Prereqs
 : "${homelab_domain?Must provide a homelab_domain env var}"
+: "${tas_subdomain?Must provide a tas_subdomain env var}"
 : "${vcenter_host?Must provide a vcenter_host env var}"
 : "${vcenter_username?Must provide a vcenter_username env var}"
 : "${vcenter_password?Must provide a vcenter_password env var}"
@@ -52,6 +55,15 @@ loadConfig "tas.config"
 : "${windows_stemcell_version:=2019.71}"
 : "${opsman_version:=3.0.37+LTS-T}"
 : "${tas_version:=10.0.2}"
+: "${install_tkgi:=false}"
+: "${tkgi_version:=1.21.0}"
+: "${tkgi_nsxt_ingress_cidr:=10.90.0.0/24}"
+: "${tkgi_nsxt_egress_cidr:=10.60.0.0/24}"
+: "${tkgi_deployment_nat_gateway_ip=10.60.0.65}"
+: "${tkgi_lb_api_virtual_server_ip_address=10.90.0.21}"
+: "${tkgi_api_host:=tkgi-api.${tas_subdomain}.${homelab_domain}}"
+: "${tkgi_clustergenai_lb_api_virtual_server_ip_address:=10.90.0.25}"
+: "${tkgi_clustergenai_host:=tkgiclustergenai1.${tas_subdomain}.${homelab_domain}}"
 
 # Pick a linux stemcell based off TAS version
 linux_stemcell_name='jammy'
@@ -63,11 +75,25 @@ fi
 
 declare -A hosts
 
+if $install_tkgi; then
+
+hosts=(["*.apps"]="$tas_lb_web_virtual_server_ip_address" \
+  ["*.sys"]="$tas_lb_web_virtual_server_ip_address" \
+  ["tcp.apps"]="$tas_lb_tcp_virtual_server_ip_address" \
+  ["ssh.sys"]="$tas_lb_ssh_virtual_server_ip_address" \
+  ["opsman"]="$tas_ops_manager_public_ip" \
+  ["tkgi-api"]="$tkgi_lb_api_virtual_server_ip_address")
+  
+else
+
 hosts=(["*.apps"]="$tas_lb_web_virtual_server_ip_address" \
   ["*.sys"]="$tas_lb_web_virtual_server_ip_address" \
   ["tcp.apps"]="$tas_lb_tcp_virtual_server_ip_address" \
   ["ssh.sys"]="$tas_lb_ssh_virtual_server_ip_address" \
   ["opsman"]="$tas_ops_manager_public_ip")
+
+fi
+
 addDNSEntries "$homelab_domain" hosts
 
 addHostToSSHConfig 'opsman' "$opsman_host" 'ubuntu'
@@ -87,7 +113,12 @@ remote::paveNSXT \
  "$nsxt_username" \
  "'$nsxt_edgecluster_name'" \
  "'$nsxt_t0_gw_name'" \
- "'$nsxt_tz_name'" 
+ "'$nsxt_tz_name'" \
+ "$install_tkgi" \
+ "$tkgi_nsxt_ingress_cidr" \
+ "$tkgi_nsxt_egress_cidr" \
+ "$tkgi_lb_api_virtual_server_ip_address" \
+ "$tkgi_deployment_nat_gateway_ip"
 remote::downloadTanzuNetPackages \
  "$tanzu_net_api_token" \
  "$opsman_version" \
@@ -96,7 +127,9 @@ remote::downloadTanzuNetPackages \
  "$linux_stemcell_version" \
  "$windows_stemcell_version" \
  "$install_full_tas" \
- "$install_tasw"
+ "$install_tasw" \
+ "$install_tkgi" \
+ "$tkgi_version"
 remote::deployOpsman \
  "$vcenter_host" \
  "$vcenter_password" \
@@ -140,6 +173,39 @@ remote::configureAndDeployTAS \
 
 addCFLoginToDirEnv "$sys_domain"
 
+if $install_tkgi; then
+  remote::configureAndDeployTKGI \
+    "$vcenter_host" \
+    "$vcenter_password" \
+    "$opsman_host" \
+    "$tkgi_api_host" \
+    "'$om_password'" \
+    "$tkgi_version" \
+    "$linux_stemcell_name" \
+    "$linux_stemcell_version" \
+    "$windows_stemcell_version" \
+    "$vcenter_datacenter" \
+    "$vcenter_datastore" \
+    "$vcenter_cluster" \
+    "$tkgi_service_cidr" \
+    "'$nsxt_t0_gw_name'" \
+    "$nsxt_host" \
+    "$nsxt_password" \
+    "$dns_servers" 
+
+  addTKGILoginToDirEnv "$tkgi_api_host" \
+    "$opsman_host" \
+    "$om_password"
+    
+  if $install_genai; then
+    remote::createTKGIgenAICluster \
+      "$tkgi_api_host" \
+      "$tkgi_clustergenai_host" \
+      "$tkgi_password"
+  fi
+
+fi
+
 echo
 echo "SSH to ${opsman_host}:"
 echo "  ssh -F ../jumpbox/.ssh/config opsman"
@@ -150,4 +216,9 @@ echo
 echo "List Operations Manager tiles"
 echo "  om products"
 echo 
-echo "Fin"
+
+if $install_tkgi; then
+  echo "List TKGI Clusters"
+  echo "  tkgi clusters"
+  echo 
+fi

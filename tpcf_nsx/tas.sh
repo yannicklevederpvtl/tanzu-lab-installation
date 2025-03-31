@@ -35,6 +35,9 @@ function downloadTanzuNetPackages {
   local windows_stemcell_version="$6"
   local install_full_tas="$7"
   local install_tasw="$8"
+  local install_tkgi="$9"
+  local tkgi_version="${10}"
+
 
   tile_glob='srt-*.pivotal'
   if [ "$install_full_tas" = true ]; then
@@ -68,6 +71,49 @@ function downloadTanzuNetPackages {
     --product-version "${linux_stemcell_version}" \
     -o ~/Downloads
 
+  if $install_tkgi; then
+
+    om download-product -p pivotal-container-service \
+      -t "${tanzu_net_api_token}" \
+      -f "pivotal-container-service-*.pivotal" \
+      --product-version "${tkgi_version}" \
+      -o ~/Downloads
+
+    if [ ! -f /usr/local/bin/pks ]; then
+      om download-product -p pivotal-container-service \
+      -t "${tanzu_net_api_token}" \
+      -f "pks-linux-amd64-1.21.0-build.55" \
+      --product-version "${tkgi_version}" \
+      -o ~/Downloads
+
+      sudo mv ~/Downloads/pks-linux-amd64-1.21.0-build.55 /usr/local/bin/pks
+      sudo chmod +x /usr/local/bin/pks
+    fi
+
+    if [ ! -f /usr/local/bin/tkgi ]; then
+      om download-product -p pivotal-container-service \
+      -t "${tanzu_net_api_token}" \
+      -f "tkgi-linux-amd64-1.21.0-build.55" \
+      --product-version "${tkgi_version}" \
+      -o ~/Downloads
+
+      sudo mv ~/Downloads/tkgi-linux-amd64-1.21.0-build.55 /usr/local/bin/tkgi
+      sudo chmod +x /usr/local/bin/tkgi
+    fi
+
+    if [ ! -f /usr/local/bin/kubectl ]; then
+      om download-product -p pivotal-container-service \
+      -t "${tanzu_net_api_token}" \
+      -f "kubectl-linux-amd64-1.30.7" \
+      --product-version "${tkgi_version}" \
+      -o ~/Downloads
+
+      sudo mv ~/Downloads/kubectl-linux-amd64-1.30.7 /usr/local/bin/kubectl
+      sudo chmod +x /usr/local/bin/kubectl
+    fi
+
+
+  fi
   if $install_tasw; then
     tile_glob='pas-windows-*.pivotal'
 
@@ -128,7 +174,6 @@ function downloadTanzuNetServicesPackages {
 }
 
 function remote::unpaveNSXT {
-  scpDir ./terraform-tas-nsxt /home/ubuntu
   remoteExec 'unpaveNSXT' "$@"
 }
 
@@ -146,49 +191,105 @@ function unpaveNSXT {
   local nsxt_edgecluster_name="${11}"
   local nsxt_t0_gw_name="${12}"
   local nsxt_tz_name="${13}"
+  local install_tkgi=${14}
+  local tkgi_nsxt_ingress_cidr=${15}
+  local tkgi_nsxt_egress_cidr=${16}
+  local tkgi_lb_api_virtual_server_ip_address=${17}
+  local tkgi_deployment_nat_gateway_ip=${18}
 
-  pushd terraform-tas-nsxt || exit
+  if $install_tkgi; then
 
-  curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors_delete.json \
-    -u "admin:${nsxt_password}" \
-    "https://${nsxt_host}/policy/api/v1/infra/"
- 
-  terraform destroy -auto-approve \
-    -var='allow_unverified_ssl=true' \
-    -var="nsxt_edge_cluster_name=${nsxt_edgecluster_name}" \
-    -var="east_west_transport_zone_name=${nsxt_tz_name}" \
-    -var="nsxt_active_t0_gateway_name=${nsxt_t0_gw_name}" \
-    -var='tas_ops_manager_private_ip=192.168.11.3' \
-    -var='tas_infra_cidr=192.168.11.0/24' \
-    -var='tas_deployment_cidr=192.168.12.0/24' \
-    -var='tas_services_cidr=192.168.13.0/24' \
-    -var='tas_lb_tcp_virtual_server_ports=["18000-32767"]' \
-    -var='tas_container_ip_block_cidr=172.16.0.0/14' \
-    -var='tas_ncp_external_snat_ip_pool_cidr=10.10.10.0/24' \
-    -var='tas_orgs_external_snat_ip_pool_start=10.10.10.10' \
-    -var='tas_orgs_external_snat_ip_pool_stop=10.10.10.250' \
-    -var='use_ncp_container_networking=false' \
-    \
-    -var="tas_ops_manager_public_ip=${tas_ops_manager_public_ip}" \
-    -var="tas_lb_web_virtual_server_ip_address=${tas_lb_web_virtual_server_ip_address}" \
-    -var="tas_lb_tcp_virtual_server_ip_address=${tas_lb_tcp_virtual_server_ip_address}" \
-    -var="tas_lb_ssh_virtual_server_ip_address=${tas_lb_ssh_virtual_server_ip_address}" \
-    \
-    -var="tas_infrastructure_nat_gateway_ip=${tas_infrastructure_nat_gateway_ip}" \
-    -var="tas_deployment_nat_gateway_ip=${tas_deployment_nat_gateway_ip}" \
-    -var="tas_services_nat_gateway_ip=${tas_services_nat_gateway_ip}" \
-    \
-    -var="nsxt_host=${nsxt_host}" \
-    -var="nsxt_username=${nsxt_username}" \
-    -var="nsxt_password=${nsxt_password}"
+      pushd terraform-tas-tkgi-nsxt || exit
 
-  popd
+      curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors_delete.json \
+        -u "admin:${nsxt_password}" \
+        "https://${nsxt_host}/policy/api/v1/infra/"
+    
+      terraform destroy -auto-approve \
+        -var='allow_unverified_ssl=true' \
+        -var="nsxt_edge_cluster_name=${nsxt_edgecluster_name}" \
+        -var="east_west_transport_zone_name=${nsxt_tz_name}" \
+        -var="nsxt_active_t0_gateway_name=${nsxt_t0_gw_name}" \
+        -var='tas_ops_manager_private_ip=192.168.11.3' \
+        -var='tas_infra_cidr=192.168.11.0/24' \
+        -var='tas_deployment_cidr=192.168.12.0/24' \
+        -var='tas_services_cidr=192.168.13.0/24' \
+        -var='tas_lb_tcp_virtual_server_ports=["18000-32767"]' \
+        -var='tas_container_ip_block_cidr=172.16.0.0/14' \
+        -var='tas_ncp_external_snat_ip_pool_cidr=10.10.10.0/24' \
+        -var='tas_orgs_external_snat_ip_pool_start=10.10.10.10' \
+        -var='tas_orgs_external_snat_ip_pool_stop=10.10.10.250' \
+        -var='use_ncp_container_networking=false' \
+        \
+        -var="tas_ops_manager_public_ip=${tas_ops_manager_public_ip}" \
+        -var="tas_lb_web_virtual_server_ip_address=${tas_lb_web_virtual_server_ip_address}" \
+        -var="tas_lb_tcp_virtual_server_ip_address=${tas_lb_tcp_virtual_server_ip_address}" \
+        -var="tas_lb_ssh_virtual_server_ip_address=${tas_lb_ssh_virtual_server_ip_address}" \
+        \
+        -var="tas_infrastructure_nat_gateway_ip=${tas_infrastructure_nat_gateway_ip}" \
+        -var="tas_deployment_nat_gateway_ip=${tas_deployment_nat_gateway_ip}" \
+        -var="tas_services_nat_gateway_ip=${tas_services_nat_gateway_ip}" \
+        \
+        -var='tkgi_deployment_cidr=192.168.14.0/24' \
+        -var="tkgi_nsxt_ingress_cidr=${tkgi_nsxt_ingress_cidr}" \
+        -var="tkgi_nsxt_egress_cidr=${tkgi_nsxt_egress_cidr}" \
+        -var="tkgi_lb_api_virtual_server_ip_address=${tkgi_lb_api_virtual_server_ip_address}" \
+        -var="tkgi_deployment_nat_gateway_ip=${tkgi_deployment_nat_gateway_ip}" \
+        \
+        -var="nsxt_host=${nsxt_host}" \
+        -var="nsxt_username=${nsxt_username}" \
+        -var="nsxt_password=${nsxt_password}"
+
+      popd
+
+  else
+
+      pushd terraform-tas-nsxt || exit
+
+      curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors_delete.json \
+        -u "admin:${nsxt_password}" \
+        "https://${nsxt_host}/policy/api/v1/infra/"
+    
+      terraform destroy -auto-approve \
+        -var='allow_unverified_ssl=true' \
+        -var="nsxt_edge_cluster_name=${nsxt_edgecluster_name}" \
+        -var="east_west_transport_zone_name=${nsxt_tz_name}" \
+        -var="nsxt_active_t0_gateway_name=${nsxt_t0_gw_name}" \
+        -var='tas_ops_manager_private_ip=192.168.11.3' \
+        -var='tas_infra_cidr=192.168.11.0/24' \
+        -var='tas_deployment_cidr=192.168.12.0/24' \
+        -var='tas_services_cidr=192.168.13.0/24' \
+        -var='tas_lb_tcp_virtual_server_ports=["18000-32767"]' \
+        -var='tas_container_ip_block_cidr=172.16.0.0/14' \
+        -var='tas_ncp_external_snat_ip_pool_cidr=10.10.10.0/24' \
+        -var='tas_orgs_external_snat_ip_pool_start=10.10.10.10' \
+        -var='tas_orgs_external_snat_ip_pool_stop=10.10.10.250' \
+        -var='use_ncp_container_networking=false' \
+        \
+        -var="tas_ops_manager_public_ip=${tas_ops_manager_public_ip}" \
+        -var="tas_lb_web_virtual_server_ip_address=${tas_lb_web_virtual_server_ip_address}" \
+        -var="tas_lb_tcp_virtual_server_ip_address=${tas_lb_tcp_virtual_server_ip_address}" \
+        -var="tas_lb_ssh_virtual_server_ip_address=${tas_lb_ssh_virtual_server_ip_address}" \
+        \
+        -var="tas_infrastructure_nat_gateway_ip=${tas_infrastructure_nat_gateway_ip}" \
+        -var="tas_deployment_nat_gateway_ip=${tas_deployment_nat_gateway_ip}" \
+        -var="tas_services_nat_gateway_ip=${tas_services_nat_gateway_ip}" \
+        \
+        -var="nsxt_host=${nsxt_host}" \
+        -var="nsxt_username=${nsxt_username}" \
+        -var="nsxt_password=${nsxt_password}"
+
+      popd
+
+  fi
 
   rm -rf "/home/ubuntu/terraform-tas-nsxt/"
+  rm -rf "/home/ubuntu/terraform-tas-tkgi-nsxt/"
 }
 
 function remote::paveNSXT {
   scpDir ./terraform-tas-nsxt /home/ubuntu
+  scpDir ./terraform-tas-tkgi-nsxt /home/ubuntu
   remoteExec 'paveNSXT' "$@"
 }
 
@@ -206,45 +307,104 @@ function paveNSXT {
   local nsxt_edgecluster_name="${11}"
   local nsxt_t0_gw_name="${12}"
   local nsxt_tz_name="${13}"
+  local install_tkgi=${14}
+  local tkgi_nsxt_ingress_cidr=${15}
+  local tkgi_nsxt_egress_cidr=${16}
+  local tkgi_lb_api_virtual_server_ip_address=${17}
+  local tkgi_deployment_nat_gateway_ip=${18}
 
-  pushd terraform-tas-nsxt || exit
-  # deploy some profiles and monitors we can't handle with tf
-  curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors.json \
+
+  if $install_tkgi; then
+    
+    pushd terraform-tas-tkgi-nsxt || exit
+    # deploy some profiles and monitors we can't handle with tf
+    curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors.json \
     -u "admin:${nsxt_password}" \
     "https://${nsxt_host}/policy/api/v1/infra/"
 
-  terraform init -reconfigure
+    terraform init -reconfigure
 
-  terraform apply -auto-approve \
-    -var='allow_unverified_ssl=true' \
-    -var="nsxt_edge_cluster_name=${nsxt_edgecluster_name}" \
-    -var="east_west_transport_zone_name=${nsxt_tz_name}" \
-    -var="nsxt_active_t0_gateway_name=${nsxt_t0_gw_name}" \
-    -var='tas_ops_manager_private_ip=192.168.11.3' \
-    -var='tas_infra_cidr=192.168.11.0/24' \
-    -var='tas_deployment_cidr=192.168.12.0/24' \
-    -var='tas_services_cidr=192.168.13.0/24' \
-    -var='tas_lb_tcp_virtual_server_ports=["18000-32767"]' \
-    -var='tas_container_ip_block_cidr=172.16.0.0/14' \
-    -var='tas_ncp_external_snat_ip_pool_cidr=10.10.10.0/24' \
-    -var='tas_orgs_external_snat_ip_pool_start=10.10.10.10' \
-    -var='tas_orgs_external_snat_ip_pool_stop=10.10.10.250' \
-    -var='use_ncp_container_networking=false' \
-    \
-    -var="tas_ops_manager_public_ip=${tas_ops_manager_public_ip}" \
-    -var="tas_lb_web_virtual_server_ip_address=${tas_lb_web_virtual_server_ip_address}" \
-    -var="tas_lb_tcp_virtual_server_ip_address=${tas_lb_tcp_virtual_server_ip_address}" \
-    -var="tas_lb_ssh_virtual_server_ip_address=${tas_lb_ssh_virtual_server_ip_address}" \
-    \
-    -var="tas_infrastructure_nat_gateway_ip=${tas_infrastructure_nat_gateway_ip}" \
-    -var="tas_deployment_nat_gateway_ip=${tas_deployment_nat_gateway_ip}" \
-    -var="tas_services_nat_gateway_ip=${tas_services_nat_gateway_ip}" \
-    \
-    -var="nsxt_host=${nsxt_host}" \
-    -var="nsxt_username=${nsxt_username}" \
-    -var="nsxt_password=${nsxt_password}"
+    terraform apply -auto-approve \
+      -var='allow_unverified_ssl=true' \
+      -var="nsxt_edge_cluster_name=${nsxt_edgecluster_name}" \
+      -var="east_west_transport_zone_name=${nsxt_tz_name}" \
+      -var="nsxt_active_t0_gateway_name=${nsxt_t0_gw_name}" \
+      -var='tas_ops_manager_private_ip=192.168.11.3' \
+      -var='tas_infra_cidr=192.168.11.0/24' \
+      -var='tas_deployment_cidr=192.168.12.0/24' \
+      -var='tas_services_cidr=192.168.13.0/24' \
+      -var='tas_lb_tcp_virtual_server_ports=["18000-32767"]' \
+      -var='tas_container_ip_block_cidr=172.16.0.0/14' \
+      -var='tas_ncp_external_snat_ip_pool_cidr=10.10.10.0/24' \
+      -var='tas_orgs_external_snat_ip_pool_start=10.10.10.10' \
+      -var='tas_orgs_external_snat_ip_pool_stop=10.10.10.250' \
+      -var='use_ncp_container_networking=false' \
+      \
+      -var="tas_ops_manager_public_ip=${tas_ops_manager_public_ip}" \
+      -var="tas_lb_web_virtual_server_ip_address=${tas_lb_web_virtual_server_ip_address}" \
+      -var="tas_lb_tcp_virtual_server_ip_address=${tas_lb_tcp_virtual_server_ip_address}" \
+      -var="tas_lb_ssh_virtual_server_ip_address=${tas_lb_ssh_virtual_server_ip_address}" \
+      \
+      -var="tas_infrastructure_nat_gateway_ip=${tas_infrastructure_nat_gateway_ip}" \
+      -var="tas_deployment_nat_gateway_ip=${tas_deployment_nat_gateway_ip}" \
+      -var="tas_services_nat_gateway_ip=${tas_services_nat_gateway_ip}" \
+      \
+      -var='tkgi_deployment_cidr=192.168.14.0/24' \
+      -var="tkgi_nsxt_ingress_cidr=${tkgi_nsxt_ingress_cidr}" \
+      -var="tkgi_nsxt_egress_cidr=${tkgi_nsxt_egress_cidr}" \
+      -var="tkgi_lb_api_virtual_server_ip_address=${tkgi_lb_api_virtual_server_ip_address}" \
+      -var="tkgi_deployment_nat_gateway_ip=${tkgi_deployment_nat_gateway_ip}" \
+      \
+      -var="nsxt_host=${nsxt_host}" \
+      -var="nsxt_username=${nsxt_username}" \
+      -var="nsxt_password=${nsxt_password}"
 
-  popd
+    popd
+
+  else
+    
+    pushd terraform-tas-nsxt || exit
+    # deploy some profiles and monitors we can't handle with tf
+    curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors.json \
+    -u "admin:${nsxt_password}" \
+    "https://${nsxt_host}/policy/api/v1/infra/"
+
+    terraform init -reconfigure
+
+    terraform apply -auto-approve \
+      -var='allow_unverified_ssl=true' \
+      -var="nsxt_edge_cluster_name=${nsxt_edgecluster_name}" \
+      -var="east_west_transport_zone_name=${nsxt_tz_name}" \
+      -var="nsxt_active_t0_gateway_name=${nsxt_t0_gw_name}" \
+      -var='tas_ops_manager_private_ip=192.168.11.3' \
+      -var='tas_infra_cidr=192.168.11.0/24' \
+      -var='tas_deployment_cidr=192.168.12.0/24' \
+      -var='tas_services_cidr=192.168.13.0/24' \
+      -var='tas_lb_tcp_virtual_server_ports=["18000-32767"]' \
+      -var='tas_container_ip_block_cidr=172.16.0.0/14' \
+      -var='tas_ncp_external_snat_ip_pool_cidr=10.10.10.0/24' \
+      -var='tas_orgs_external_snat_ip_pool_start=10.10.10.10' \
+      -var='tas_orgs_external_snat_ip_pool_stop=10.10.10.250' \
+      -var='use_ncp_container_networking=false' \
+      \
+      -var="tas_ops_manager_public_ip=${tas_ops_manager_public_ip}" \
+      -var="tas_lb_web_virtual_server_ip_address=${tas_lb_web_virtual_server_ip_address}" \
+      -var="tas_lb_tcp_virtual_server_ip_address=${tas_lb_tcp_virtual_server_ip_address}" \
+      -var="tas_lb_ssh_virtual_server_ip_address=${tas_lb_ssh_virtual_server_ip_address}" \
+      \
+      -var="tas_infrastructure_nat_gateway_ip=${tas_infrastructure_nat_gateway_ip}" \
+      -var="tas_deployment_nat_gateway_ip=${tas_deployment_nat_gateway_ip}" \
+      -var="tas_services_nat_gateway_ip=${tas_services_nat_gateway_ip}" \
+      \
+      -var="nsxt_host=${nsxt_host}" \
+      -var="nsxt_username=${nsxt_username}" \
+      -var="nsxt_password=${nsxt_password}"
+
+    popd
+    
+  fi
+
+
 
 }
 
@@ -431,6 +591,7 @@ function configureAndDeployPostgres {
 
 function remote::configureAndDeployGenAI {
   scpFile ./genai.yml /tmp/genai.yml
+  scpFile ./genaitkgi.yml /tmp/genaitkgi.yml
   remoteExec 'configureAndDeployGenAI' "$@"
 }
 
@@ -438,6 +599,9 @@ function configureAndDeployGenAI {
   local opsman_host="$1"
   local om_password="$2"
   local genai_version="$3"
+  local install_tkgi="$4"
+  local tkgi_api_host="$5"
+  local cluster_name="tkgiclustergenai1"
 
   # Set om connection info
   export \
@@ -446,6 +610,14 @@ function configureAndDeployGenAI {
     OM_DECRYPTION_PASSPHRASE="${om_password}" \
     OM_SKIP_SSL_VALIDATION='true' \
     OM_TARGET="${opsman_host}"
+
+
+  if tkgi get-credentials "${cluster_name}"; then
+    kubectl config use-context "${cluster_name}"
+    kubectl create namespace genai-dev-space-1
+    kubectl label namespace genai-dev-space-1 ai.apps.tanzu.vmware.com/integration=create
+    # kubectl get secrets -n genai-dev-space-1 -l app.kubernetes.io/managed-by=genai-tpcf -o json | jq '.items[] | {name: .metadata.name,data: .data|map_values(@base64d)}'
+  fi
 
   tile_version=$(tanzuNetFileVersion "$genai_version")
 
@@ -457,9 +629,24 @@ function configureAndDeployGenAI {
   om -r=10800 --trace upload-product -p "$genai_tile"  
   om stage-product --product-name=genai --product-version="${genai_version}"
 
+ 
   # Configure GenAI
-  om configure-product \
-    --config /tmp/genai.yml
+
+  if $install_tkgi; then
+
+    om configure-product \
+      --config /tmp/genai.yml
+
+    # tkgi_admin_client_secret=$(om credentials -p pivotal-container-service -c '.properties.pks_uaa_management_admin_client' -t json | jq -r .secret)
+    # om configure-product \
+    #   --config /tmp/genaitkgi.yml \
+    #   --var "tkgi_api_url=${tkgi_api_host}" \
+    #   --var "tkgi_admin_client_secret=${tkgi_admin_client_secret}" 
+  else
+
+    om configure-product \
+      --config /tmp/genai.yml
+  fi
 
   # One apply change
   om apply-changes --product-name "genai"
@@ -481,6 +668,7 @@ cf target -o dev
 if ! cf space dev > /dev/null; then cf create-space dev; fi
 cf target -s dev
 EOF
+  eval "$(direnv export bash)"
 fi
 }
 

@@ -17,4 +17,5 @@ controller-22.1.7-9093.ova
 *.crt
 temp/
 temp0/
+tkgi_nsx/
 .idea

@@ -66,6 +66,15 @@ networks-configuration:
       reserved_ip_ranges: 192.168.13.1-192.168.13.10
       availability_zone_names:
       - az1
+  - name: tkgi-deployment
+    subnets:
+    - iaas_identifier: tkgi-deployment-segment
+      cidr: 192.168.14.0/24
+      dns: ((iaas-configurations_0_dns_servers))
+      gateway: 192.168.14.1
+      reserved_ip_ranges: 192.168.14.1-192.168.14.10
+      availability_zone_names:
+      - az1
 properties-configuration:
   director_configuration:
     additional_ssh_users: []

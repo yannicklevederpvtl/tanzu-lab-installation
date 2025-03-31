@@ -1,0 +1,10 @@
+{
+    "name": "default-small-plan-network-profile",
+    "description": "Increases the number of floating ip pools",
+    "parameters": {
+      "fip_pool_ids": [
+        "tkgi-ingress-floating-pool",
+        "tkgi-egress-floating-pool"
+      ]
+    }
+  } 

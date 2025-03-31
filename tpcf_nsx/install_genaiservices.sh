@@ -22,6 +22,8 @@ loadConfig "tas.config"
 # Defaults
 : "${tcp_fqdn:=tcp.${tas_subdomain}.${homelab_domain}}"
 : "${opsman_host:=opsman.${tas_subdomain}.${homelab_domain}}"
+: "${install_tkgi:=false}"
+: "${tkgi_api_host:=tkgi-api.${tas_subdomain}.${homelab_domain}}"
 
 remote::downloadTanzuNetServicesPackages \
   "$tanzu_net_api_token" \
@@ -41,7 +43,15 @@ remote::configureAndDeployPostgres \
 remote::configureAndDeployGenAI \
   "$opsman_host" \
   "'$om_password'" \
-  "$genai_version"
+  "$genai_version" \
+  "$install_tkgi" \
+  "$tkgi_api_host"
 
-echo 
-echo "Fin"
+if $install_tkgi; then
+  echo "To test beta TKGI Integration, in the GenAI tile enter the TKGI information:"
+  echo "TKGi API URL: {$tkgi_api_host}"
+  echo "TKGi admin client: admin"
+  echo "TKGi API URL: {$(om credentials -p pivotal-container-service -c '.properties.pks_uaa_management_admin_client' -t json | jq -r .secret)}"
+  echo 
+  echo "Select 'On' for the 'Converge TKGi clusters' errand and Apply Changes for the GenAI tile"
+fi

@@ -1,8 +1,8 @@
 # Tanzu Platform for Cloud Foundry
-Automation to install TPCF (small footprint runtime) in your homelab environment (NSX-T deployment type) & GenAI for TPCF
+Automation to install TPCF (small footprint runtime) in your homelab environment (NSX-T deployment type) and optionally GenAI for TPCF or/and TKGI (Tanzu Kubenetes Grid Integrated) with the [beta] GenAI Inegration for your k8s clusters. 
 
 ### Prerequisites
-vCenter 7.x or superior, one routable Port Groups (here "Management" as default value), an NSX T0 with BGP and Internet access properly configured, for example GenAI workers in the "Services" segment need to access/download AI models from the Internet. The script will Terraform all the T1, LBs, Pools, etc.
+vCenter 7.x or superior, one routable Port Groups (here "Management" as default value), an NSX T0 with BGP and Internet access properly configured, for example GenAI workers in the "Services" segment need to access/download AI models from the Internet. The script will Terraform all the T1, LBs, Pools, etc. and deploy the platform.
 
 ## Install TPCF
 This script assumes you're running it from a Mac or Linux workstation connected
@@ -20,7 +20,7 @@ like downloading and uploading the OpsMan OVA and TPCF tile.
 Once installation is complete the script generates an `.envrc` file for this
 environment in the current `tpcf_nsx` directory. If you have [direnv] installed
 you can execute `direnv allow` which will setup the environment connection
-variables for [om], [bosh], [CF] CLIs
+variables for [om], [bosh], [CF], [tkgi] CLIs
 
 You can then start using commands from your workstation in the current `tpcf_nsx` directory, for example:
 
@@ -54,8 +54,18 @@ To access Apps Manager GUI (`admin` as username, `In the OpsMan GUI -> TPCF Tile
 https://login.sys.<tas_subdomain>.<homelab_domain>
 ```
 
+## Install TKGI
+Set the `install_tkgi` value to `true` in the `tas.config` file before running the TPCF `./install.sh` script
+
+List TKGI clusters
+```sh
+tkgi clusters
+```
+
 ## Install Postgres & GenAI tiles
 This script assumes that TPFC is deployed
+
+Set the `install_genai` value to `true` in the `tas.config` file
 
 ```sh
 ./install_genaiservices.sh
@@ -104,6 +114,13 @@ install_genai='true'
 genai_version='10.0.2'
 install_postgres='true'
 postgres_version='1.1.2-build.6'
+install_tkgi='true'
+tkgi_version='1.21.0'
+tkgi_lb_api_virtual_server_ip_address='10.90.0.21'
+tkgi_deployment_nat_gateway_ip='10.60.0.68'
+tkgi_service_cidr='10.100.200.0/24'
+tkgi_nsxt_ingress_cidr='10.90.0.0/24'
+tkgi_nsxt_egress_cidr='10.60.0.0/24'
 ```
 
 - `tas_infrastructure_nat_gateway_ip` is the SNAT IP for all VMs on the private infrastructure network,
@@ -124,7 +141,16 @@ This is the IP address that your `*.apps` and `*.sys` DNS entries should point t
 - `tas_version` - the TPCF version to deploy, versions 4.0.x through 10.0.2 are supported.
 - `install_full_tas` - when true the full (large) version of TPCF is deployed, otherwise the TPCF small footprint version. (not yet functional)
 - `install_tasw` - when true TPCF is deployed with the Windows stack. (not yet functional)
-
+- `install_tkgi` - when true TKGI is deployed with the TPCF stack
+- `tkgi_lb_api_virtual_server_ip_address` is the DNAT IP address for the TKGI API. This is the IP address
+the `tkgi-api` DNS entry should point to.
+- `tkgi_deployment_nat_gateway_ip` is the SNAT IP for all TKGI k8s cluster VMs (nsxt-egress).
+- `tkgi_nsxt_ingress_cidr`is the IP range for any NSX-T ingress load balancer that sits in front of
+your k8s clusters. The first 25 IPs of this range are reserved for OpsMan, TAS & TKGI API.
+TKGI will configure a floating IP pool using IPs of this range for LBs and namespaces, so in this example 10.90.0.25 -> 10.90.0.100
+- `tkgi_nsxt_egress_cidr` is the IP range for any NSX-T egress. The first 70 IPs are reserved for SNAT from the TAS & TKGI infra and deployment networks.
+TKGI will take 31 IPs from this subnet to be used as another floating IP pool for TKGI, so in this example 10.60.0.70 -> 10.60.0.100
+- `tkgi_deployment_nat_gateway_ip` is the SNAT IP for all TKGI k8s cluster VMs
 
 After completing your edits, run the install script:
 ```bash
@@ -143,5 +169,7 @@ To destroy the TPCF deployment run
 [om]: https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-operations-manager/3-0/tanzu-ops-manager/install-cli.html
 [bosh]: https://bosh.io/docs/cli-v2-install/
 [CF]: https://docs.cloudfoundry.org/cf-cli/install-go-cli.html
+[tkgi]: https://techdocs.broadcom.com/us/en/vmware-tanzu/standalone-components/tanzu-kubernetes-grid-integrated-edition/1-20/tkgi/installing-cli.html
 [jumpbox]: ../jumpbox/README.md
 [configuration]: #configuration
+[beta]: https://techdocs.broadcom.com/us/en/vmware-tanzu/platform-services/genai-on-tanzu-platform-for-cloud-foundry/10-0/ai-cf/tutorials-tkgi.html
