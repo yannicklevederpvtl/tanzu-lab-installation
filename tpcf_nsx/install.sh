@@ -64,7 +64,7 @@ loadConfig "tas.config"
 : "${tkgi_api_host:=tkgi-api.${tas_subdomain}.${homelab_domain}}"
 : "${tkgi_clustergenai_lb_api_virtual_server_ip_address:=10.90.0.25}"
 : "${tkgi_clustergenai_host:=tkgiclustergenai1.${tas_subdomain}.${homelab_domain}}"
-: "${directorconfigfile:='./director.yml'}"
+: "${directorconfigfile:=./director.yml}"
 
 # Pick a linux stemcell based off TAS version
 linux_stemcell_name='jammy'
@@ -99,57 +99,57 @@ fi
 
 addDNSEntries "$homelab_domain" "$tas_subdomain" hosts
 
-addHostToSSHConfig 'opsman' "$opsman_host" 'ubuntu'
-createOpsmanDirEnv
+# addHostToSSHConfig 'opsman' "$opsman_host" 'ubuntu'
+# createOpsmanDirEnv
 
-remote::installTASTools
-remote::paveNSXT \
- "$nsxt_host" \
- "$nsxt_password" \
- "$tas_ops_manager_public_ip" \
- "$tas_lb_web_virtual_server_ip_address" \
- "$tas_lb_tcp_virtual_server_ip_address" \
- "$tas_lb_ssh_virtual_server_ip_address" \
- "$tas_infrastructure_nat_gateway_ip" \
- "$tas_deployment_nat_gateway_ip" \
- "$tas_services_nat_gateway_ip" \
- "$nsxt_username" \
- "'$nsxt_edgecluster_name'" \
- "'$nsxt_t0_gw_name'" \
- "'$nsxt_tz_name'" \
- "$install_tkgi" \
- "$tkgi_nsxt_ingress_cidr" \
- "$tkgi_nsxt_egress_cidr" \
- "$tkgi_lb_api_virtual_server_ip_address" \
- "$tkgi_deployment_nat_gateway_ip"
-remote::downloadTanzuNetPackages \
- "$tanzu_net_api_token" \
- "$opsman_version" \
- "$tas_version" \
- "$linux_stemcell_name" \
- "$linux_stemcell_version" \
- "$windows_stemcell_version" \
- "$install_full_tas" \
- "$install_tasw" \
- "$install_tkgi" \
- "$tkgi_version" \
- "$install_tpsm" \
- "$tpsm_version"
-remote::deployOpsman \
- "$vcenter_host" \
- "$vcenter_password" \
- "$opsman_version" \
- "$vcenter_pool" \
- 'tas-infra-segment' \
- "$vcenter_username" \
- "$dns_servers" \
- "$ntp_servers" \
- "$vcenter_datacenter" \
- "$vcenter_cluster" \
- "$opsman_vm_name" \
- "$opsman_private_ip" \
- "$opsman_gateway" \
- "$vcenter_datastore"
+# remote::installTASTools
+# remote::paveNSXT \
+#  "$nsxt_host" \
+#  "$nsxt_password" \
+#  "$tas_ops_manager_public_ip" \
+#  "$tas_lb_web_virtual_server_ip_address" \
+#  "$tas_lb_tcp_virtual_server_ip_address" \
+#  "$tas_lb_ssh_virtual_server_ip_address" \
+#  "$tas_infrastructure_nat_gateway_ip" \
+#  "$tas_deployment_nat_gateway_ip" \
+#  "$tas_services_nat_gateway_ip" \
+#  "$nsxt_username" \
+#  "'$nsxt_edgecluster_name'" \
+#  "'$nsxt_t0_gw_name'" \
+#  "'$nsxt_tz_name'" \
+#  "$install_tkgi" \
+#  "$tkgi_nsxt_ingress_cidr" \
+#  "$tkgi_nsxt_egress_cidr" \
+#  "$tkgi_lb_api_virtual_server_ip_address" \
+#  "$tkgi_deployment_nat_gateway_ip"
+# remote::downloadTanzuNetPackages \
+#  "$tanzu_net_api_token" \
+#  "$opsman_version" \
+#  "$tas_version" \
+#  "$linux_stemcell_name" \
+#  "$linux_stemcell_version" \
+#  "$windows_stemcell_version" \
+#  "$install_full_tas" \
+#  "$install_tasw" \
+#  "$install_tkgi" \
+#  "$tkgi_version" \
+#  "$install_tpsm" \
+#  "$tpsm_version"
+# remote::deployOpsman \
+#  "$vcenter_host" \
+#  "$vcenter_password" \
+#  "$opsman_version" \
+#  "$vcenter_pool" \
+#  'tas-infra-segment' \
+#  "$vcenter_username" \
+#  "$dns_servers" \
+#  "$ntp_servers" \
+#  "$vcenter_datacenter" \
+#  "$vcenter_cluster" \
+#  "$opsman_vm_name" \
+#  "$opsman_private_ip" \
+#  "$opsman_gateway" \
+#  "$vcenter_datastore"
 remote::configureAndDeployBOSH \
  "$vcenter_host" \
  "$nsxt_host" \
