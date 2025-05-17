@@ -64,6 +64,7 @@ loadConfig "tas.config"
 : "${tkgi_api_host:=tkgi-api.${tas_subdomain}.${homelab_domain}}"
 : "${tkgi_clustergenai_lb_api_virtual_server_ip_address:=10.90.0.25}"
 : "${tkgi_clustergenai_host:=tkgiclustergenai1.${tas_subdomain}.${homelab_domain}}"
+: "${directorconfigfile:='./director.yml'}"
 
 # Pick a linux stemcell based off TAS version
 linux_stemcell_name='jammy'
@@ -83,6 +84,8 @@ hosts=(["*.apps"]="$tas_lb_web_virtual_server_ip_address" \
   ["ssh.sys"]="$tas_lb_ssh_virtual_server_ip_address" \
   ["opsman"]="$tas_ops_manager_public_ip" \
   ["tkgi-api"]="$tkgi_lb_api_virtual_server_ip_address")
+
+directorconfigfile='./directortkgi.yml'
   
 else
 
@@ -94,7 +97,7 @@ hosts=(["*.apps"]="$tas_lb_web_virtual_server_ip_address" \
 
 fi
 
-addDNSEntries "$homelab_domain" hosts
+addDNSEntries "$homelab_domain" "$tas_subdomain" hosts
 
 addHostToSSHConfig 'opsman' "$opsman_host" 'ubuntu'
 createOpsmanDirEnv
@@ -129,7 +132,9 @@ remote::downloadTanzuNetPackages \
  "$install_full_tas" \
  "$install_tasw" \
  "$install_tkgi" \
- "$tkgi_version"
+ "$tkgi_version" \
+ "$install_tpsm" \
+ "$tpsm_version"
 remote::deployOpsman \
  "$vcenter_host" \
  "$vcenter_password" \
@@ -159,7 +164,7 @@ remote::configureAndDeployBOSH \
  "$dns_servers" \
  "$ntp_servers" \
  "$vcenter_username" \
- "./director.yml"
+ "$directorconfigfile"
 remote::configureAndDeployTAS \
  "$opsman_host" \
  "'$om_password'" \

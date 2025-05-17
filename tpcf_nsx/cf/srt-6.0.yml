@@ -43,6 +43,8 @@ product-properties:
     value: 50
   .mysql.max_connections:
     value: 3500
+  .mysql_monitor.recipient_email:
+    value: noreply@vmware.com
   .mysql.prevent_node_auto_rejoin:
     value: false
   .mysql.remote_admin_access:

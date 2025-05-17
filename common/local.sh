@@ -98,7 +98,8 @@ function netmaskToCidrBits () {
 
 function addDNSEntries {
   local homelab_domain="$1"
-  local -n hosts_to_ips=$2
+  local tas_subdomain="$2"
+  local -n hosts_to_ips=$3
   echo "Make sure to create these DNS Records before continuing"
   echo
   for host in "${!hosts_to_ips[@]}"; do

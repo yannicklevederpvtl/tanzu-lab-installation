@@ -426,7 +426,7 @@ function configureAndDeployPostgres {
     --config /tmp/postgres.yml \
     --var "tcp_fqdn=${tcp_fqdn}" \
 
-  ## One apply change
+  # One apply change
   om apply-changes --product-name "postgres"
 }
 

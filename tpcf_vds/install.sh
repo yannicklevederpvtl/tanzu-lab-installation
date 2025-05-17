@@ -69,7 +69,7 @@ hosts=(["*.apps"]="$tas_lb_web_virtual_server_ip_address" \
   ["ssh.sys"]="$tas_lb_ssh_virtual_server_ip_address" \
   ["opsman"]="$opsman_private_ip")
 
-addDNSEntries "$homelab_domain" hosts
+addDNSEntries "$homelab_domain" "$tas_subdomain" hosts
 
 addHostToSSHConfig 'opsman' "$opsman_host" 'ubuntu'
 createOpsmanDirEnv

@@ -22,9 +22,46 @@ function deleteTanzuNetPackages {
   rm -rf "/home/ubuntu/Downloads/"
 }
 
+function remote::downloadTPSMPackages {
+  remoteExec 'downloadTanzuNetPackages' "$@"
+}
+
+function downloadTPSMPackages {
+  local tanzu_net_api_token="$1"
+  local install_tpsm="$2"
+  local tpsm_version="$3"
+
+  if $install_tpsm; then
+
+    om download-product -p tanzu-platform \
+      -t "${tanzu_net_api_token}" \
+      -f "tanzu-self-managed-*.tar.gz.part_aa" \
+      --product-version "${tpsm_version}" \
+      -o ~/Downloads
+    om download-product -p tanzu-platform \
+      -t "${tanzu_net_api_token}" \
+      -f "tanzu-self-managed-*.tar.gz.part_ab" \
+      --product-version "${tpsm_version}" \
+      -o ~/Downloads
+    om download-product -p tanzu-platform \
+      -t "${tanzu_net_api_token}" \
+      -f "tanzu-self-managed-*.tar.gz.part_ac" \
+      --product-version "${tpsm_version}" \
+      -o ~/Downloads
+    om download-product -p tanzu-platform \
+      -t "${tanzu_net_api_token}" \
+      -f "tanzu-self-managed-*.tar.gz.part_ad" \
+      --product-version "${tpsm_version}" \
+      -o ~/Downloads
+  fi
+
+}
+
 function remote::downloadTanzuNetPackages {
   remoteExec 'downloadTanzuNetPackages' "$@"
 }
+
+
 
 function downloadTanzuNetPackages {
   local tanzu_net_api_token="$1"
@@ -200,10 +237,6 @@ function unpaveNSXT {
   if $install_tkgi; then
 
       pushd terraform-tas-tkgi-nsxt || exit
-
-      curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors_delete.json \
-        -u "admin:${nsxt_password}" \
-        "https://${nsxt_host}/policy/api/v1/infra/"
     
       terraform destroy -auto-approve \
         -var='allow_unverified_ssl=true' \
@@ -239,16 +272,16 @@ function unpaveNSXT {
         -var="nsxt_host=${nsxt_host}" \
         -var="nsxt_username=${nsxt_username}" \
         -var="nsxt_password=${nsxt_password}"
+      
+      curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors_delete.json \
+        -u "admin:${nsxt_password}" \
+        "https://${nsxt_host}/policy/api/v1/infra/"
 
       popd
 
   else
 
       pushd terraform-tas-nsxt || exit
-
-      curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors_delete.json \
-        -u "admin:${nsxt_password}" \
-        "https://${nsxt_host}/policy/api/v1/infra/"
     
       terraform destroy -auto-approve \
         -var='allow_unverified_ssl=true' \
@@ -278,13 +311,17 @@ function unpaveNSXT {
         -var="nsxt_host=${nsxt_host}" \
         -var="nsxt_username=${nsxt_username}" \
         -var="nsxt_password=${nsxt_password}"
+      
+      curl -k -X PATCH -H 'Content-Type: application/json' -d @./profiles_and_monitors_delete.json \
+        -u "admin:${nsxt_password}" \
+        "https://${nsxt_host}/policy/api/v1/infra/"
 
       popd
 
   fi
 
-  rm -rf "/home/ubuntu/terraform-tas-nsxt/"
-  rm -rf "/home/ubuntu/terraform-tas-tkgi-nsxt/"
+  # rm -rf "/home/ubuntu/terraform-tas-nsxt/"
+  # rm -rf "/home/ubuntu/terraform-tas-tkgi-nsxt/"
 }
 
 function remote::paveNSXT {
@@ -570,8 +607,7 @@ function configureAndDeployPostgres {
     OM_TARGET="${opsman_host}"
 
   tile_version=$(tanzuNetFileVersion "$postgres_version")
-  echo 'a'
-  echo $tile_version
+
   tile_prefix='postgres'
 
   postgres_tile=$(findDownloadedOpsmanTile "${HOME}/Downloads" "$tile_prefix" "$tile_version")
