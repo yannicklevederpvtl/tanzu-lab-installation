@@ -71,6 +71,15 @@ Set the `install_genai` value to `true` in the `tas.config` file
 ./install_genaiservices.sh
 ```
 
+## Install Healthwatch tiles
+This script assumes that TPFC is deployed
+
+Set the `install_healthwatch` value to `true` in the `tas.config` file
+
+```sh
+./install_extratiles.sh
+```
+
 ## Configuration
 Edit the values as needed in the `tas.config` file
 
@@ -106,21 +115,23 @@ tas_lb_ssh_virtual_server_ip_address='10.90.0.20'
 install_full_tas='false'
 install_tasw='false'
 xenial_stemcell_version='621.969'
-jammy_stemcell_version='1.785'
+jammy_stemcell_version='1.808'
 windows_stemcell_version='2019.71'
-opsman_version='3.0.40+LTS-T'
-tas_version='10.0.5'
+opsman_version='3.0.41+LTS-T'
+tas_version='10.0.6'
 install_genai='true'
 genai_version='10.0.3'
 install_postgres='true'
-postgres_version='10.0.0-build.31'
+postgres_version='10.1.0'
 install_tkgi='true'
-tkgi_version='1.21.0'
+tkgi_version='1.22.1'
 tkgi_lb_api_virtual_server_ip_address='10.90.0.21'
 tkgi_deployment_nat_gateway_ip='10.60.0.68'
 tkgi_service_cidr='10.100.200.0/24'
 tkgi_nsxt_ingress_cidr='10.90.0.0/24'
 tkgi_nsxt_egress_cidr='10.60.0.0/24'
+install_healthwatch='true'
+healthwatch_version='2.3.2'
 ```
 
 - `tas_infrastructure_nat_gateway_ip` is the SNAT IP for all VMs on the private infrastructure network,
