@@ -20,10 +20,10 @@ function downloadInstallTKGICLI {
 
   om download-product -p pivotal-container-service \
     -t "${tanzu_net_api_token}" \
-    -f "tkgi-linux-amd64-1.21.0-build.55" \
-    --product-version "1.21.0" \
+    -f "tkgi-linux-amd64-1.22.0-build.12" \
+    --product-version "1.22.1" \
     -o ./
-  sudo mv -f ./tkgi-linux-amd64-1.21.0-build.55 /usr/local/bin/tkgi
+  sudo mv -f ./tkgi-linux-amd64-1.22.0-build.12 /usr/local/bin/tkgi
   chmod +x /usr/local/bin/tkgi
 
 }

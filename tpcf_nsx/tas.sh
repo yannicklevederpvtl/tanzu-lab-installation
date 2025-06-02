@@ -22,40 +22,40 @@ function deleteTanzuNetPackages {
   rm -rf "/home/ubuntu/Downloads/"
 }
 
-function remote::downloadTPSMPackages {
-  remoteExec 'downloadTanzuNetPackages' "$@"
-}
+# function remote::downloadTPSMPackages {
+#   remoteExec 'downloadTanzuNetPackages' "$@"
+# }
 
-function downloadTPSMPackages {
-  local tanzu_net_api_token="$1"
-  local install_tpsm="$2"
-  local tpsm_version="$3"
+# function downloadTPSMPackages {
+#   local tanzu_net_api_token="$1"
+#   local install_tpsm="$2"
+#   local tpsm_version="$3"
 
-  if $install_tpsm; then
+#   if $install_tpsm; then
 
-    om download-product -p tanzu-platform \
-      -t "${tanzu_net_api_token}" \
-      -f "tanzu-self-managed-*.tar.gz.part_aa" \
-      --product-version "${tpsm_version}" \
-      -o ~/Downloads
-    om download-product -p tanzu-platform \
-      -t "${tanzu_net_api_token}" \
-      -f "tanzu-self-managed-*.tar.gz.part_ab" \
-      --product-version "${tpsm_version}" \
-      -o ~/Downloads
-    om download-product -p tanzu-platform \
-      -t "${tanzu_net_api_token}" \
-      -f "tanzu-self-managed-*.tar.gz.part_ac" \
-      --product-version "${tpsm_version}" \
-      -o ~/Downloads
-    om download-product -p tanzu-platform \
-      -t "${tanzu_net_api_token}" \
-      -f "tanzu-self-managed-*.tar.gz.part_ad" \
-      --product-version "${tpsm_version}" \
-      -o ~/Downloads
-  fi
+#     om download-product -p tanzu-platform \
+#       -t "${tanzu_net_api_token}" \
+#       -f "tanzu-self-managed-*.tar.gz.part_aa" \
+#       --product-version "${tpsm_version}" \
+#       -o ~/Downloads
+#     om download-product -p tanzu-platform \
+#       -t "${tanzu_net_api_token}" \
+#       -f "tanzu-self-managed-*.tar.gz.part_ab" \
+#       --product-version "${tpsm_version}" \
+#       -o ~/Downloads
+#     om download-product -p tanzu-platform \
+#       -t "${tanzu_net_api_token}" \
+#       -f "tanzu-self-managed-*.tar.gz.part_ac" \
+#       --product-version "${tpsm_version}" \
+#       -o ~/Downloads
+#     om download-product -p tanzu-platform \
+#       -t "${tanzu_net_api_token}" \
+#       -f "tanzu-self-managed-*.tar.gz.part_ad" \
+#       --product-version "${tpsm_version}" \
+#       -o ~/Downloads
+#   fi
 
-}
+# }
 
 function remote::downloadTanzuNetPackages {
   remoteExec 'downloadTanzuNetPackages' "$@"
@@ -119,33 +119,33 @@ function downloadTanzuNetPackages {
     if [ ! -f /usr/local/bin/pks ]; then
       om download-product -p pivotal-container-service \
       -t "${tanzu_net_api_token}" \
-      -f "pks-linux-amd64-1.21.0-build.55" \
+      -f "pks-linux-amd64-1.22.0-build.12" \
       --product-version "${tkgi_version}" \
       -o ~/Downloads
 
-      sudo mv ~/Downloads/pks-linux-amd64-1.21.0-build.55 /usr/local/bin/pks
+      sudo mv ~/Downloads/pks-linux-amd64-1.22.0-build.12 /usr/local/bin/pks
       sudo chmod +x /usr/local/bin/pks
     fi
 
     if [ ! -f /usr/local/bin/tkgi ]; then
       om download-product -p pivotal-container-service \
       -t "${tanzu_net_api_token}" \
-      -f "tkgi-linux-amd64-1.21.0-build.55" \
+      -f "tkgi-linux-amd64-1.22.0-build.12" \
       --product-version "${tkgi_version}" \
       -o ~/Downloads
 
-      sudo mv ~/Downloads/tkgi-linux-amd64-1.21.0-build.55 /usr/local/bin/tkgi
+      sudo mv ~/Downloads/tkgi-linux-amd64-1.22.0-build.12 /usr/local/bin/tkgi
       sudo chmod +x /usr/local/bin/tkgi
     fi
 
     if [ ! -f /usr/local/bin/kubectl ]; then
       om download-product -p pivotal-container-service \
       -t "${tanzu_net_api_token}" \
-      -f "kubectl-linux-amd64-1.30.7" \
+      -f "kubectl-linux-amd64-1.31.5" \
       --product-version "${tkgi_version}" \
       -o ~/Downloads
 
-      sudo mv ~/Downloads/kubectl-linux-amd64-1.30.7 /usr/local/bin/kubectl
+      sudo mv ~/Downloads/kubectl-linux-amd64-1.31.5 /usr/local/bin/kubectl
       sudo chmod +x /usr/local/bin/kubectl
     fi
 
@@ -188,8 +188,6 @@ function downloadTanzuNetServicesPackages {
   local install_postgres="$6"
   local postgres_version="$7"
 
- 
-
   if $install_genai; then
     tile_glob='genai-*.pivotal'
     om download-product -p genai-for-tas \
@@ -207,8 +205,48 @@ function downloadTanzuNetServicesPackages {
     --product-version "${tile_version}" \
     -o ~/Downloads
   fi
-
 }
+
+function remote::downloadTanzuNetHealthwatchPackages {
+  remoteExec 'downloadTanzuNetHealthwatchPackages' "$@"
+}
+
+function downloadTanzuNetHealthwatchPackages {
+  local tanzu_net_api_token="$1"
+  local opsman_version="$2"
+  local tas_version="$3"
+  local install_heatlthwatch="$4"
+  local heatlthwatch_version="$5"
+  local install_tkgi="$6"
+  local install_genai="$7"
+
+  if $install_heatlthwatch; then
+
+    tile_glob="healthwatch-${heatlthwatch_version}*.pivotal"
+    om download-product -p p-healthwatch \
+    -t "${tanzu_net_api_token}" \
+    -f "${tile_glob}" \
+    --product-version "${heatlthwatch_version}" \
+    -o ~/Downloads
+
+    tile_glob="healthwatch-pas*.pivotal"
+    om download-product -p p-healthwatch \
+    -t "${tanzu_net_api_token}" \
+    -f "${tile_glob}" \
+    --product-version "${heatlthwatch_version}" \
+    -o ~/Downloads
+
+    if $install_tkgi; then
+      tile_glob="healthwatch-pks*.pivotal"
+      om download-product -p p-healthwatch \
+      -t "${tanzu_net_api_token}" \
+      -f "${tile_glob}" \
+      --product-version "${heatlthwatch_version}" \
+      -o ~/Downloads
+    fi
+  fi
+}
+
 
 function remote::unpaveNSXT {
   remoteExec 'unpaveNSXT' "$@"
@@ -531,7 +569,6 @@ function configureAndDeployTAS {
   tas_tile=$(findDownloadedOpsmanTile "${HOME}/Downloads" "$tile_prefix" "$tile_version")
 
 # upload and stage the tile
-  echo "$tas_tile"
   om -r=10800 --trace upload-product -p "$tas_tile"  
   om stage-product --product-name=cf --product-version="${tile_version}"
   
@@ -611,10 +648,12 @@ function configureAndDeployPostgres {
   tile_prefix='postgres'
 
   postgres_tile=$(findDownloadedOpsmanTile "${HOME}/Downloads" "$tile_prefix" "$tile_version")
-  echo $postgres_tile
   # upload and stage the tile
   om -r=10800 --trace upload-product -p "$postgres_tile"  
-  om stage-product --product-name=postgres --product-version="${postgres_version}"
+
+  build_ver=$(om products -a -f json | jq -r '.[] | select(.name == "postgres") | .available | .[]')
+
+  om stage-product --product-name=postgres --product-version="${build_ver}"
 
   # Configure TAS
   om configure-product \
@@ -720,4 +759,66 @@ function findTASProductConfigFile {
 
   major_minor="${tas_version%.*}"
   echo "${config_dir}/${product}-${major_minor}.yml"
+}
+
+function remote::configureAndDeployHealthwatch {
+  scpFile ./healthwatch.yml /tmp/healthwatch.yml
+  scpFile ./healthwatch-pas-exporter.yml /tmp/healthwatch-pas-exporter.yml
+  scpFile ./healthwatch-pks-exporter.yml /tmp/healthwatch-pks-exporter.yml
+  remoteExec 'configureAndDeployHealthwatch' "$@"
+}
+
+function configureAndDeployHealthwatch {
+  local opsman_host="$1"
+  local om_password="$2"
+  local healthwatch_version="$3"
+  local install_tkgi="$4"
+  local install_genai="$5"
+
+  # Set om connection info
+  export \
+    OM_USERNAME='admin' \
+    OM_PASSWORD="${om_password}" \
+    OM_DECRYPTION_PASSPHRASE="${om_password}" \
+    OM_SKIP_SSL_VALIDATION='true' \
+    OM_TARGET="${opsman_host}"
+
+  tile_version=$(tanzuNetFileVersion "$healthwatch_version")
+
+  tile_prefix='healthwatch'
+  healthwatch_tile=$(findDownloadedOpsmanTile "${HOME}/Downloads/" "$tile_prefix" "$tile_version")
+  # upload and stage the tile
+  om -r=10800 --trace upload-product -p "$healthwatch_tile"  
+  build_ver=$(om products -a -f json | jq -r '.[] | select(.name == "p-healthwatch2") | .available | .[]')
+  om stage-product --product-name=p-healthwatch2 --product-version="${build_ver}"
+  om configure-product \
+     --config /tmp/healthwatch.yml
+
+  tile_prefix='healthwatch-pas-exporter'
+  healthwatch_tile=$(findDownloadedOpsmanTile "${HOME}/Downloads/" "$tile_prefix" "$tile_version")
+  # upload and stage the tile
+  om -r=10800 --trace upload-product -p "$healthwatch_tile" 
+  build_ver=$(om products -a -f json | jq -r '.[] | select(.name == "p-healthwatch2-pas-exporter") | .available | .[]')
+  om stage-product --product-name=p-healthwatch2-pas-exporter --product-version="${build_ver}"
+  om configure-product \
+     --config /tmp/healthwatch-pas-exporter.yml
+
+  if $install_tkgi; then
+    tile_prefix='healthwatch-pks-exporter'
+    healthwatch_tile=$(findDownloadedOpsmanTile "${HOME}/Downloads/" "$tile_prefix" "$tile_version")
+    # upload and stage the tile
+    om -r=10800 --trace upload-product -p "$healthwatch_tile"
+    build_ver=$(om products -a -f json | jq -r '.[] | select(.name == "p-healthwatch2-pks-exporter") | .available | .[]')
+    om stage-product --product-name=p-healthwatch2-pks-exporter --product-version="${build_ver}"
+    om configure-product \
+      --config /tmp/healthwatch-pks-exporter.yml
+  fi
+
+  ## One apply change
+  if $install_tkgi; then
+    om apply-changes --product-name p-healthwatch2 --product-name p-healthwatch2-pas-exporter --product-name p-healthwatch2-pks-exporter
+  else
+    om apply-changes --product-name p-healthwatch2 --product-name p-healthwatch2-pas-exporter
+  fi
+
 }

@@ -4,10 +4,6 @@ product-properties:
     value: postgres
   .postgres-on-demand-broker.enable_create_swap_delete:
     value: false
-  .postgres-on-demand-broker.pg_password:
-    value: admin
-  .postgres-on-demand-broker.pg_user:
-    value: pgadmin
   .postgres-on-demand-broker.service_instance_limit:
     value: 30
   .postgres-on-demand-broker.service_instance_sharing:
@@ -40,16 +36,13 @@ product-properties:
       tcp_keepalive: 60
       timeout: 3600
       tls_enabled: false
-      vm_type: medium
+      vm_type: null
   .properties.settings_services_gateway:
     selected_option: disabled
     value: "No"
   .properties.settings_shareable_instances:
     selected_option: disabled
     value: "No"
-  .properties.syslog:
-    selected_option: disable
-    value: disable
 network-properties:
   network:
     name: deployment

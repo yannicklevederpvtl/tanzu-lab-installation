@@ -132,9 +132,7 @@ remote::downloadTanzuNetPackages \
  "$install_full_tas" \
  "$install_tasw" \
  "$install_tkgi" \
- "$tkgi_version" \
- "$install_tpsm" \
- "$tpsm_version"
+ "$tkgi_version" 
 remote::deployOpsman \
  "$vcenter_host" \
  "$vcenter_password" \
