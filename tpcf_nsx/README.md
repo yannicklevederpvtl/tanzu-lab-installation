@@ -72,13 +72,8 @@ Set the `install_genai` value to `true` in the `tas.config` file
 ```
 
 ## Install Healthwatch tiles
-This script assumes that TPFC is deployed
+Set the `install_healthwatch` value to `true` in the `tas.config` file before running the TPCF `./install.sh` script
 
-Set the `install_healthwatch` value to `true` in the `tas.config` file
-
-```sh
-./install_extratiles.sh
-```
 
 ## Configuration
 Edit the values as needed in the `tas.config` file

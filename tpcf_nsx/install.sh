@@ -206,9 +206,22 @@ if $install_tkgi; then
       "$tkgi_clustergenai_host" \
       "$tkgi_password"
   fi
-
 fi
-
+if $install_healthwatch; then
+  remote::downloadTanzuNetHealthwatchPackages \
+    "$tanzu_net_api_token" \
+    "$opsman_version" \
+    "$tas_version" \
+    "$healthwatch_version" \
+    "$install_tkgi" \
+    "$install_genai"
+  remote::configureAndDeployHealthwatch \
+    "$opsman_host" \
+    "'$om_password'" \
+    "$healthwatch_version" \
+    "$install_tkgi" \
+    "$install_genai"
+fi
 echo
 echo "SSH to ${opsman_host}:"
 echo "  ssh -F ../jumpbox/.ssh/config opsman"

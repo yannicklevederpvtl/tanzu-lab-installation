@@ -215,36 +215,33 @@ function downloadTanzuNetHealthwatchPackages {
   local tanzu_net_api_token="$1"
   local opsman_version="$2"
   local tas_version="$3"
-  local install_heatlthwatch="$4"
-  local heatlthwatch_version="$5"
-  local install_tkgi="$6"
-  local install_genai="$7"
+  local heatlthwatch_version="$4"
+  local install_tkgi="$5"
+  local install_genai="$6"
 
-  if $install_heatlthwatch; then
+  tile_glob="healthwatch-${heatlthwatch_version}*.pivotal"
+  om download-product -p p-healthwatch \
+  -t "${tanzu_net_api_token}" \
+  -f "${tile_glob}" \
+  --product-version "${heatlthwatch_version}" \
+  -o ~/Downloads
 
-    tile_glob="healthwatch-${heatlthwatch_version}*.pivotal"
+  tile_glob="healthwatch-pas*.pivotal"
+  om download-product -p p-healthwatch \
+  -t "${tanzu_net_api_token}" \
+  -f "${tile_glob}" \
+  --product-version "${heatlthwatch_version}" \
+  -o ~/Downloads
+
+  if $install_tkgi; then
+    tile_glob="healthwatch-pks*.pivotal"
     om download-product -p p-healthwatch \
     -t "${tanzu_net_api_token}" \
     -f "${tile_glob}" \
     --product-version "${heatlthwatch_version}" \
     -o ~/Downloads
-
-    tile_glob="healthwatch-pas*.pivotal"
-    om download-product -p p-healthwatch \
-    -t "${tanzu_net_api_token}" \
-    -f "${tile_glob}" \
-    --product-version "${heatlthwatch_version}" \
-    -o ~/Downloads
-
-    if $install_tkgi; then
-      tile_glob="healthwatch-pks*.pivotal"
-      om download-product -p p-healthwatch \
-      -t "${tanzu_net_api_token}" \
-      -f "${tile_glob}" \
-      --product-version "${heatlthwatch_version}" \
-      -o ~/Downloads
-    fi
   fi
+
 }
 
 
