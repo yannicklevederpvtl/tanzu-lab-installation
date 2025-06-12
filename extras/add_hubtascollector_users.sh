@@ -6,11 +6,11 @@
 set -euo pipefail  # Exit on error, undefined vars, and pipe failures
 
 # Configuration
-OPSMAN_URL=""  # Will be prompted if empty
+OPSMAN_URL=""  # Will be fetch from opsman SSH config file
 BOSH_DIRECTOR_IP=""  # Will be auto-detected
 CLIENT_NAME="hub-tas-collector"
 CLIENT_SECRET=""  # Will be prompted if empty
-SSH_CONFIG_PATH=""
+SSH_CONFIG_PATH="" # Will be prompted if empty
 
 # Opsman authentication variables
 OPSMAN_USERNAME=""
