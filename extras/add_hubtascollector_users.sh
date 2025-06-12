@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Cloud Foundry Opsman UAA Client Setup Script
-# This script automates the process of adding a UAA client through Opsman
+# This script automates the process of adding a UAA client through Opsman for the Hub Collector
 
 set -euo pipefail  # Exit on error, undefined vars, and pipe failures
 
 # Configuration
-OPSMAN_URL=""  # Will be fetch from opsman SSH config file
+OPSMAN_URL=""  # Will be fetched from opsman SSH config file
 BOSH_DIRECTOR_IP=""  # Will be auto-detected
 CLIENT_NAME="hub-tas-collector"
 CLIENT_SECRET=""  # Will be prompted if empty
