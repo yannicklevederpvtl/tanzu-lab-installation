@@ -103,7 +103,7 @@ function addDNSEntries {
   echo "Make sure to create these DNS Records before continuing"
   echo
   for host in "${!hosts_to_ips[@]}"; do
-     fqdn="${host}.tas.${homelab_domain}"
+     fqdn="${host}.${tas_subdomain}.${homelab_domain}"
      ip="${hosts_to_ips[$host]}"
      echo "${fqdn}. A ${ip}"
   done
