@@ -74,10 +74,13 @@ Set the `install_genai` value to `true` in the `tas.config` file
 ## Install Healthwatch tiles
 Set the `install_healthwatch` value to `true` in the `tas.config` file before running the TPCF `./install.sh` script
 
+
 ## Install Hub Collector tile
 Set the `install_hubcollector` value to `true` in the `tas.config` file before running the TPCF `./install_hubcollector.sh` script
 
-Use `extras/add_hubtascollector_users.sh` to create [hubcollector] users before configuring the Hub Collector tile with user credentials and Hub credentials
+Use the `extras/add_hubtascollector_users.sh` script to create [hubcollector] users before finishing to configure the Hub Collector tile with these user credentials and the foundation credentials provided when adding a foundation in Hub
+
+Use `../jumpbox/.ssh/config` as Opsman SSH config file path when asked, `hub-tas-collector` is used as default username for both users
 
 
 ## Configuration
