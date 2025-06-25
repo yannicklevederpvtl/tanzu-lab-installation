@@ -74,6 +74,11 @@ Set the `install_genai` value to `true` in the `tas.config` file
 ## Install Healthwatch tiles
 Set the `install_healthwatch` value to `true` in the `tas.config` file before running the TPCF `./install.sh` script
 
+## Install Hub Collector tile
+Set the `install_hubcollector` value to `true` in the `tas.config` file before running the TPCF `./install_hubcollector.sh` script
+
+Use `extras/add_hubtascollector_users.sh` to create [hubcollector] users before configuring the Hub Collector tile with user credentials and Hub credentials
+
 
 ## Configuration
 Edit the values as needed in the `tas.config` file
@@ -179,3 +184,4 @@ To destroy the TPCF deployment run (if TKGI,  delete your TKGI clusters first)
 [jumpbox]: ../jumpbox/README.md
 [configuration]: #configuration
 [beta]: https://techdocs.broadcom.com/us/en/vmware-tanzu/platform-services/genai-on-tanzu-platform-for-cloud-foundry/10-0/ai-cf/tutorials-tkgi.html
+[hubcollector]: https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/10-2/tnz-hub/foundations-overview.html

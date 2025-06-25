@@ -1,0 +1,166 @@
+product-name: p-healthwatch2
+product-properties:
+  .grafana.disable_gravatar:
+    value: false
+  .grafana.enable_legacy_alerting:
+    value: false
+  .grafana.enable_router_logging:
+    value: false
+  .properties.dashboard_discovery_tas:
+    selected_option: enabled
+    value: enabled
+  .properties.dashboard_discovery_tas.enabled.tas_version:
+    value: dynamic
+  .properties.dashboard_discovery_tkgi:
+    selected_option: enabled
+    value: enabled
+  .properties.dashboard_discovery_tkgi.enabled.tkgi_version:
+    value: dynamic
+  .properties.dashboards_mysql:
+    selected_option: disabled
+    value: disabled
+  .properties.dashboards_rabbitmq:
+    selected_option: disabled
+    value: disabled
+  .properties.enable_basic_auth:
+    selected_option: enabled
+    value: enabled
+  .properties.grafana_authentication:
+    selected_option: uaa
+    value: uaa
+  .properties.grafana_proxy:
+    selected_option: disabled
+    value: disabled
+  .properties.grafana_route:
+    selected_option: tas
+    value: tas
+  .properties.pks_cluster_discovery:
+    selected_option: enabled
+    value: enabled
+  .properties.pks_cluster_discovery.enabled.disabled:
+    value: true
+  .properties.pks_cluster_discovery.enabled.discovery_frequency_seconds:
+    value: 600
+  .properties.pks_cluster_discovery.enabled.enabled:
+    value: false
+  .properties.pks_cluster_discovery.enabled.pks_skip_ssl_verification:
+    value: false
+  .properties.skip_custom_app_metrics:
+    value: false
+  .properties.smtp:
+    selected_option: disabled
+    value: disabled
+  .properties.use_otel_for_metrics_collection:
+    value: false
+  .tsdb.canary_exporter_port:
+    value: 9115
+  .tsdb.disk_chunk_size:
+    value: 6144
+  .tsdb.memory_chunk_size:
+    value: 4096
+  .tsdb.routing_rules:
+    value: |
+      receiver: 'default-receiver'
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      group_by: [cluster, alertname]
+  .tsdb.scrape_interval:
+    value: 15s
+network-properties:
+  network:
+    name: services
+  other_availability_zones:
+  - name: az1
+  singleton_availability_zone:
+    name: az1
+resource-config:
+  grafana:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  pxc:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  pxc-proxy:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  tsdb:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  smoke-test:
+    post-deploy-state: true
+  update-admin-password:
+    post-deploy-state: true
+syslog-properties:
+  address: null
+  custom_rsyslog_configuration: null
+  enabled: false
+  environment: null
+  forward_debug_logs: false
+  permitted_peer: null
+  port: null
+  queue_size: null
+  ssl_ca_certificate: null
+  tls_enabled: false
+  transport_protocol: tcp

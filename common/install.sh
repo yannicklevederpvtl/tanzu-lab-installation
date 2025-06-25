@@ -6,9 +6,9 @@ set -o pipefail
 function installOm {
   if [ ! -f /usr/local/bin/om ]; then
     echo "Installing om"
-    wget -q https://github.com/pivotal-cf/om/releases/download/7.15.0/om-linux-amd64-7.15.0
-    sudo install om-linux-amd64-7.15.0 /usr/local/bin/om
-    rm -f om-linux-amd64-7.15.0
+    wget -q https://github.com/pivotal-cf/om/releases/download/7.16.0/om-linux-amd64-7.16.0
+    sudo install om-linux-amd64-7.16.0 /usr/local/bin/om
+    rm -f om-linux-amd64-7.16.0
   fi
 }
 
@@ -35,7 +35,7 @@ function installTerraform {
 function installGovc {
   if [ ! -f /usr/local/bin/govc ]; then
       echo "Installing govc"
-      wget -q https://github.com/vmware/govmomi/releases/download/v0.49.0/govc_Linux_x86_64.tar.gz
+      wget -q https://github.com/vmware/govmomi/releases/download/v0.51.0/govc_Linux_x86_64.tar.gz
       tar -xf govc_Linux_x86_64.tar.gz
       sudo install govc /usr/local/bin/govc
       rm -f govc_Linux_x86_64.tar.gz
@@ -75,9 +75,9 @@ function installKind {
 function installBosh {
   if [ ! -f /usr/local/bin/bosh ]; then
       echo "Installing bosh"
-      wget -q https://github.com/cloudfoundry/bosh-cli/releases/download/v7.9.4/bosh-cli-7.9.4-linux-amd64
-      sudo install bosh-cli-7.9.4-linux-amd64 /usr/local/bin/bosh
-      rm -f bosh-cli-7.9.4-linux-amd64
+      wget -q https://github.com/cloudfoundry/bosh-cli/releases/download/v7.9.7/bosh-cli-7.9.7-linux-amd64
+      sudo install bosh-cli-7.9.7-linux-amd64 /usr/local/bin/bosh
+      rm -f bosh-cli-7.9.7-linux-amd64
   fi
 }
 

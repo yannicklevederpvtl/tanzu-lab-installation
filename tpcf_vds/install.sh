@@ -13,8 +13,12 @@ source ../common/install.sh
 # shellcheck source=common/opsman.sh
 source ../common/opsman.sh
 
-# shellcheck source=tas/tas.sh
-source ./tas.sh
+# shellcheck source=common/tas.sh
+source ../common/tas.sh
+
+# shellcheck source=tas/tasvds.sh
+source ./tasvds.sh
+
 loadJumpboxConfig
 loadConfig "tas.config"
 
@@ -48,6 +52,7 @@ loadConfig "tas.config"
 : "${windows_stemcell_version:=2019.71}"
 : "${opsman_version:=3.0.37+LTS-T}"
 : "${tas_version:=10.0.2}"
+: "${tas_licensekey:=xxxx-xxxx-xxxx-xxxx}"
 
 # Pick a linux stemcell based off TAS version
 linux_stemcell_name='jammy'
@@ -132,9 +137,27 @@ remote::configureAndDeployTAS \
  "$linux_stemcell_name" \
  "$linux_stemcell_version" \
  "$install_full_tas" \
- "$install_tasw"
+ "$install_tasw" \
+ "$tas_licensekey"
 
 addCFLoginToDirEnv "$sys_domain"
+
+if $install_healthwatch; then
+  remote::downloadTanzuNetHealthwatchPackages \
+    "$tanzu_net_api_token" \
+    "$opsman_version" \
+    "$tas_version" \
+    "$healthwatch_version" \
+    "$install_tkgi" \
+    "$install_genai"
+
+  remote::configureAndDeployHealthwatch \
+    "$opsman_host" \
+    "'$om_password'" \
+    "$healthwatch_version" \
+    "$install_tkgi" \
+    "$install_genai"
+fi
 
 echo
 echo "SSH to ${opsman_host}:"

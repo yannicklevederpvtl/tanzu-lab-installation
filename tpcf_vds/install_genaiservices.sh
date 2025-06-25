@@ -10,8 +10,8 @@ source ../common/local.sh
 # shellcheck source=common/install.sh
 source ../common/install.sh
 
-# shellcheck source=tas/tas.sh
-source ./tas.sh
+# shellcheck source=common/opsman.sh
+source ../common/tas.sh
 
 # shellcheck source=common/opsman.sh
 source ../common/opsman.sh
@@ -22,6 +22,8 @@ loadConfig "tas.config"
 # Defaults
 : "${tcp_fqdn:=tcp.${tas_subdomain}.${homelab_domain}}"
 : "${opsman_host:=opsman.${tas_subdomain}.${homelab_domain}}"
+: "${install_tkgi:=false}"
+: "${tkgi_api_host:=https://tkgi-api.${tas_subdomain}.${homelab_domain}}"
 
 remote::downloadTanzuNetServicesPackages \
   "$tanzu_net_api_token" \
@@ -30,7 +32,7 @@ remote::downloadTanzuNetServicesPackages \
   "$install_genai" \
   "$genai_version" \
   "$install_postgres" \
-  "$postgres_version" \
+  "$postgres_version"
 
 remote::configureAndDeployPostgres \
  "$opsman_host" \
@@ -41,7 +43,9 @@ remote::configureAndDeployPostgres \
 remote::configureAndDeployGenAI \
   "$opsman_host" \
   "'$om_password'" \
-  "$genai_version"
-
-echo 
-echo "Fin"
+  "$genai_version" \
+  "$install_tkgi" \
+  "$tkgi_api_host"
+  
+echo
+echo "Completion of GenAI services installation"

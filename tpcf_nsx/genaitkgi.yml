@@ -1,5 +1,22 @@
 product-name: genai
 product-properties:
+  .controller.active_profiles:
+    value: ga-providers,ga-rules,config-api,manage-ui,audit
+  .controller.audit_logging_level:
+    value: DEFAULT
+  .controller.audit_logging_retention:
+    value: 48
+  .controller.plans:
+    value:
+    - binding_credential_format: legacy
+      cf_access_enabled: true
+      description: null
+      model_handles: gemma
+      name: gemma
+      requests_per_minute: null
+      run_release_tests: true
+      tkgi_access_enabled: false
+      tokens_per_minute: null
   .controller.strict_mode:
     value: true
   .errands.aws_vm_types:
@@ -41,30 +58,34 @@ product-properties:
     - azs:
       - az1
       disk_type: null
+      handle: gemma
       instances: 1
       model_aliases: null
       model_capabilities:
       - chat
+      model_modelfile: null
       model_name: gemma2:2b
       model_url: null
       model_url_auth: null
       model_url_sha: null
-      plan_access_enabled: true
-      plan_description: null
-      plan_name: null
-      requests_per_minute: null
-      tkgi_access_enabled: false
-      tokens_per_minute: null
+      ollama_context_length: 2048
+      ollama_flash_attention: true
+      ollama_keep_alive: 60m
+      ollama_kv_cache_type: f16
+      ollama_load_timeout: 5m
+      ollama_num_parallel: 0
       vm_type: cpu
       wire_format: openai
   .errands.register_broker_https:
-    value: truels
+    value: true
   .errands.tkgi_api_url:
     value: ((tkgi_api_url))
   .errands.tkgi_admin_client:
-    value: admin
+    value: 
+      secret: admin
   .errands.tkgi_admin_client_secret:
-    value: ((tkgi_admin_client_secret))
+    value: 
+      secret: ((tkgi_admin_client_secret))
   .errands.tkgi_skip_ssl_validation:
     value: true
   .errands.vgpu_license_server_port:
@@ -74,8 +95,8 @@ product-properties:
     - cpu: 8
       ephemeral_disk: 65536
       name: cpu
-      pci_passthrough_device_id: null
-      pci_passthrough_vendor_id: null
+      pci_passthrough_device_ids: null
+      pci_passthrough_vendor_ids: null
       pci_passthrough_vmx_opts_MMIO_size: null
       pci_passthrough_vmx_opts_use_64_bit_MMIO: null
       processing_technology: cpu
@@ -155,7 +176,7 @@ errand-config:
   recreate-service-instances:
     post-deploy-state: false
   release-tests:
-    post-deploy-state: false
+    post-deploy-state: true
 syslog-properties:
   address: null
   custom_rsyslog_configuration: null

@@ -1,0 +1,107 @@
+product-name: p-healthwatch2-pks-exporter
+product-properties:
+  .bosh-health-exporter.health_check_az:
+    value: az1
+  .cert-expiration-exporter.skip_ssl_validation:
+    value: false
+  .pks-sli-exporter.skip_ssl_verification:
+    value: true
+  .pks-sli-exporter.test_frequency_seconds:
+    value: 60
+network-properties:
+  network:
+    name: infra
+  other_availability_zones:
+  - name: az1
+  service_network:
+    name: services
+  singleton_availability_zone:
+    name: az1
+resource-config:
+  bosh-deployments-exporter:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  bosh-health-exporter:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  cert-expiration-exporter:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  pks-sli-exporter:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  bosh-cleanup-wait:
+    pre-delete-state: true
+syslog-properties:
+  address: null
+  custom_rsyslog_configuration: null
+  enabled: false
+  environment: null
+  forward_debug_logs: false
+  permitted_peer: null
+  port: null
+  queue_size: null
+  ssl_ca_certificate: null
+  tls_enabled: false
+  transport_protocol: tcp

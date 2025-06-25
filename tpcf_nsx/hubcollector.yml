@@ -1,0 +1,165 @@
+product-name: hub-tas-collector
+product-properties:
+  .hub_tas_agent.cf_skip_ssl_validation:
+    value: false
+  .hub_tas_agent.collect_bosh_entities:
+    value: true
+  .hub_tas_agent.collect_spring_entities:
+    value: true
+  .hub_tas_agent.collect_tas_entities:
+    value: true
+  .hub_tas_agent.collect_tas_role_bindings:
+    value: false
+  .hub_tas_agent.environment_type:
+    value: Sandbox
+  .hub_tas_agent.log_level:
+    value: error
+  .hub_tas_agent.metrics_domain:
+    value: observability
+  .hub_tas_agent.opsmanager_request_timeout:
+    value: 3m
+  .hub_tas_agent.opsmanager_skip_ssl_validation:
+    value: true
+  .properties.audit_event_stream:
+    value: tss-events-pipeline-stream
+  .properties.change_event_stream:
+    value: tas-change-events
+  .properties.collect_product_consumption_data:
+    value: false
+  .properties.collect_scg_data:
+    value: false
+  .properties.droplet_exporter_cleanup_interval:
+    value: 30
+  .properties.droplet_exporter_enable_buildpack_sboms:
+    value: false
+  .properties.droplet_exporter_polling_interval:
+    value: 5
+  .properties.enable_droplet_exporter:
+    value: true
+  .properties.enable_droplet_exporter_for_all_apps:
+    value: false
+  .properties.enable_mtls_application_logs:
+    value: false
+  .properties.enable_tls_platform_logs:
+    value: disabled
+  .properties.ingestion_url:
+    value: https://data.platform.tanzu.broadcom.com
+  .properties.inventory_stream:
+    value: tas-ingestion-inventory
+  .properties.logs_stream:
+    value: tss-ingestion-pipeline-stream
+  .properties.metrics_stream:
+    value: tss-proto
+  .properties.product_consumption_data_stream:
+    value: platform-consumption-data
+  .properties.proxy_selector:
+    selected_option: disabled
+    value: disabled
+  .properties.rbac_config:
+    selected_option: enabled
+    value: enabled
+  .properties.rbac_stream:
+    value: tas-rbac-stream
+  .properties.scg_stream:
+    value: tas-scg-stream
+  .properties.skip_ssl_validation:
+    value: false
+  .properties.use_otel_for_metrics_collection:
+    value: false
+network-properties:
+  network:
+    name: deployment
+  other_availability_zones:
+  - name: az1
+  singleton_availability_zone:
+    name: az1
+resource-config:
+  hub_tas_agent:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  pas_exporter_counter:
+    max_in_flight: 5
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  pas_exporter_gauge:
+    max_in_flight: 5
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    persistent_disk:
+      name: automatic
+      size_mb: automatic
+    swap_as_percent_of_memory_size: automatic
+  pas_exporter_timer:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    swap_as_percent_of_memory_size: automatic
+  telegraf:
+    max_in_flight: 1
+    additional_networks: []
+    additional_vm_extensions: []
+    avi:
+      pools: []
+    instance_type:
+      id: automatic
+    instances: automatic
+    nsxt:
+      lb:
+        server_pools: []
+      ns_groups: []
+      vif_type: null
+    swap_as_percent_of_memory_size: automatic
+errand-config:
+  backfill-max-instances-metrics:
+    post-deploy-state: false
+  healthwatch-data-migration:
+    post-deploy-state: false

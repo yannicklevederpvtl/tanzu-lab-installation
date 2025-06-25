@@ -7,8 +7,11 @@ set -o pipefail
 # shellcheck source=common/local.sh
 source ../common/local.sh
 
-# shellcheck source=tpcf_vds/tas.sh
-source ./tas.sh
+# shellcheck source=common/tas.sh
+source ../common/tas.sh
+
+# shellcheck source=tpcf_vds/tasvds.sh
+source ./tasvds.sh
 
 loadJumpboxConfig
 loadConfig "tas.config"

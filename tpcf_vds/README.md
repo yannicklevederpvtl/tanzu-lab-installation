@@ -138,4 +138,5 @@ To destroy the TPCF deployment run
 [CF]: https://docs.cloudfoundry.org/cf-cli/install-go-cli.html
 [jumpbox]: ../jumpbox/README.md
 [configuration]: #configuration
+[hubcollector]: https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/10-2/tnz-hub/foundations-overview.html
 

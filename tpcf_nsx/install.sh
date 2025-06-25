@@ -13,10 +13,15 @@ source ../common/install.sh
 # shellcheck source=common/opsman.sh
 source ../common/opsman.sh
 
-# shellcheck source=tpcf_nsx/tas.sh
-source ./tas.sh
+# shellcheck source=common/tas.sh
+source ../common/tas.sh
+
+# shellcheck source=tpcf_nsx/tasnsx.sh
+source ./tasnsx.sh
+
 # shellcheck source=tpcf_nsx/tkgi.sh
 source ./tkgi.sh
+
 loadJumpboxConfig
 loadConfig "tas.config"
 
@@ -55,6 +60,7 @@ loadConfig "tas.config"
 : "${windows_stemcell_version:=2019.71}"
 : "${opsman_version:=3.0.37+LTS-T}"
 : "${tas_version:=10.0.2}"
+: "${tas_licensekey:=xxxx-xxxx-xxxx-xxxx}"
 : "${install_tkgi:=false}"
 : "${tkgi_version:=1.21.0}"
 : "${tkgi_nsxt_ingress_cidr:=10.90.0.0/24}"
@@ -172,7 +178,8 @@ remote::configureAndDeployTAS \
  "$linux_stemcell_name" \
  "$linux_stemcell_version" \
  "$install_full_tas" \
- "$install_tasw"
+ "$install_tasw" \
+ "$tas_licensekey"
 
 addCFLoginToDirEnv "$sys_domain"
 
@@ -215,6 +222,7 @@ if $install_healthwatch; then
     "$healthwatch_version" \
     "$install_tkgi" \
     "$install_genai"
+
   remote::configureAndDeployHealthwatch \
     "$opsman_host" \
     "'$om_password'" \

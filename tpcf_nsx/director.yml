@@ -7,7 +7,8 @@ az-configuration:
     host_group: null
     resource_pool: ((iaas-configurations_0_vcenter_pool))
 iaas-configurations:
-- additional_cloud_properties: {}
+- additional_cloud_properties: 
+  - enable_human_readable_name : true
   bosh_disk_path: tas_disk
   bosh_template_folder: tas_templates
   bosh_vm_folder: tas_vms
