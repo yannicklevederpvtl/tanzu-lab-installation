@@ -68,7 +68,7 @@ Set the `install_healthwatch` value to `true` in the `tas.config` file before ru
 ## Install Hub Collector tile
 Set the `install_hubcollector` value to `true` in the `tas.config` file before running the TPCF `./install_hubcollector.sh` script
 
-Use the `extras/add_hubtascollector_users.sh` script to create [hubcollector] users before finishing to configure the Hub Collector tile with these user credentials and the foundation credentials provided when adding a foundation in Hub
+Use the `extras/add_hubtascollector_users.sh` script to create [hubcollector] users (in BOSH Director and Opsman) before finishing to configure the Hub Collector tile with these user credentials and the foundation credentials provided when adding a foundation in Hub
 
 Use `../jumpbox/.ssh/config` as Opsman SSH config file path when asked, `hub-tas-collector` is used as default username for both users
 
@@ -155,5 +155,5 @@ To destroy the TPCF deployment run
 [CF]: https://docs.cloudfoundry.org/cf-cli/install-go-cli.html
 [jumpbox]: ../jumpbox/README.md
 [configuration]: #configuration
-[hubcollector]: https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/10-2/tnz-hub/foundations-overview.html
+[hubcollector]: https://techdocs.broadcom.com/us/en/vmware-tanzu/platform/tanzu-hub/10-2/tnz-hub/foundations-connect-foundation.html#get-creds
 
