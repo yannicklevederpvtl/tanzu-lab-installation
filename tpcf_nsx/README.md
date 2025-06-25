@@ -1,5 +1,5 @@
 # Tanzu Platform for Cloud Foundry
-Automation to install TPCF (small footprint runtime) in your homelab environment (NSX-T deployment type) and optionally GenAI for TPCF or/and TKGI (Tanzu Kubenetes Grid Integrated) with the [beta] GenAI Inegration for your k8s clusters. 
+Automation to download & install TPCF (small footprint runtime) in your homelab environment (NSX-T deployment type) and optionally GenAI for TPCF or/and TKGI (Tanzu Kubenetes Grid Integrated) with the [beta] GenAI Inegration for your k8s clusters. 
 
 ### Prerequisites
 vCenter 7.x or superior, one routable Port Groups (here "Management" as default value), an NSX T0 with BGP and Internet access properly configured, for example GenAI workers in the "Services" segment need to access/download AI models from the Internet. The script will Terraform all the T1, LBs, Pools, etc. and deploy the platform.

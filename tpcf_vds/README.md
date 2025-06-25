@@ -1,5 +1,5 @@
 # Tanzu Platform for Cloud Foundry
-Automation to install TPCF (small footprint runtime) in your homelab environment (VDS deployment type, no load balancers) & GenAI for TPCF
+Automation to download & install TPCF (small footprint runtime) in your homelab environment (VDS deployment type, no load balancers) & GenAI for TPCF
 
 ### Prerequisites
 vCenter 7.x or superior, 3 routable Port Groups (for example "Management", "Deployment", "Services" as default values, see [configuration] to customize it as needed) with Internet access, for example GenAI workers in the "Services" segment need to access/download AI models from the Internet
